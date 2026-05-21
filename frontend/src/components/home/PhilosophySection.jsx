@@ -92,7 +92,7 @@ export default function PhilosophySection({ sectionData }) {
               >
                 <span className={
                   shouldHighlight 
-                    ? "text-highlight font-medium italic border-b border-highlight/15" 
+                    ? "text-highlight font-medium border-b border-highlight/15" 
                     : "opacity-80"
                 }>
                   {word}

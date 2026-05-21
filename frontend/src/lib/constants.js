@@ -1,13 +1,14 @@
 export const CONFIG = {
   profile: {
     name: "MUHAMMED ASHIQUE",
-    title: "Full Stack Developer & React Specialist",
+    title: "Full Stack | React | Node.js",
+    tagline: "Here's my take, whether it's building software or products.",
+    philosophyTag: "Design. Develop. Deliver.",
     speedCounter: {
       value: 11.0,
       label: "Faster",
       sublabel: "Optimized Performance"
     },
-    tagline: ".?."
   },
   
   philosophy: [

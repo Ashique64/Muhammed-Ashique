@@ -1,118 +1,154 @@
 "use client";
 
-import { useEffect } from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { CONFIG } from "@/lib/constants";
+
+/* ─── Pre-computed particle ring dots (deterministic = no hydration issues) ── */
+const RING_DOTS = Array.from({ length: 220 }, (_, i) => {
+  const angle  = (i / 220) * 2 * Math.PI;
+  // Slight radius variance for a "cloud" feel
+  const radii  = [128, 131, 126, 133, 129, 135, 127, 132, 130, 128];
+  const r      = radii[i % radii.length];
+  const x      = 150 + r * Math.cos(angle);
+  const y      = 150 + r * Math.sin(angle);
+  const sizes  = [0.5, 0.9, 1.3, 0.6, 1.1, 0.7, 1.5, 0.8, 1.0, 0.6];
+  const opacs  = [0.35, 0.65, 0.9, 0.5, 0.75, 0.4, 0.85, 0.55, 0.7, 0.45];
+  return { x, y, r: sizes[i % sizes.length], o: opacs[i % opacs.length] };
+});
 
 export default function Hero() {
   const { name, title, speedCounter, tagline } = CONFIG.profile;
-  const nameParts = name.split(" ");
 
-  // High performance decimal counter
-  const count = useMotionValue(0.0);
-  const roundedCount = useTransform(count, (latest) => latest.toFixed(1));
+  // ── Mounted guard: prevents Framer Motion SSR hydration mismatch ──────────
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    // Animate count up to target speed value
-    const controls = animate(count, speedCounter.value, {
-      duration: 2.2,
-      ease: [0.16, 1, 0.3, 1], // premium custom ease-out curve
-      delay: 0.8,
-    });
-    return () => controls.stop();
-  }, [count, speedCounter.value]);
+  // Return a plain black screen on the server — no animations, no mismatch
+  if (!mounted) {
+    return (
+      <section className="relative w-full min-h-screen bg-bg flex flex-col px-8 md:px-12 pt-8 pb-10">
+        <div className="relative z-10 mt-6 md:mt-8">
+          <h1 className="font-display text-[8vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase opacity-0">
+            {name}
+          </h1>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col justify-between px-6 pt-32 pb-12 md:px-12 md:pb-16 bg-bg overflow-hidden select-none">
-      
-      {/* Visual Background Accent - Sleek Dark Ambient Glow */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-white/[0.02] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/[0.01] rounded-full blur-[100px] pointer-events-none" />
+    <section className="relative w-full min-h-screen bg-bg overflow-hidden flex flex-col px-8 md:px-12 pt-8 pb-10">
 
-      {/* Main Large Editorial Typographic Header */}
-      <div className="flex-1 flex flex-col justify-center">
-        <h1 className="font-display text-[13vw] leading-[0.8] tracking-tight uppercase flex flex-col items-start w-full select-none">
-          {nameParts.map((part, index) => (
-            <motion.span
-              key={part}
-              className={`block ${
-                index % 2 === 1 
-                  ? "pl-[8vw] md:pl-[15vw] italic text-zinc-300 font-extralight" 
-                  : "font-bold text-highlight"
-              }`}
-              initial={{ opacity: 0, y: 80 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 1.2,
-                delay: index * 0.15 + 0.3,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-            >
-              {part}
-            </motion.span>
-          ))}
-        </h1>
+      {/* ── TOP-LEFT: Name + Subtitle ─────────────────────────────────────── */}
+      <div className="relative z-10 mt-6 md:mt-8">
+        <motion.h1
+          className="font-display text-[8vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {name}
+        </motion.h1>
+
+        <motion.p
+          className="font-sans text-sm md:text-base text-accent/70 mt-3 tracking-wide"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+        >
+          {title}
+        </motion.p>
       </div>
 
-      {/* Hero Bottom Footer Panel */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-end pt-12 border-t border-white/5">
-        
-        {/* Left Col: Speed Ticker */}
-        <motion.div
-          className="flex flex-col items-start"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-        >
-          <div className="flex items-baseline gap-1">
-            <motion.span className="font-mono text-4xl md:text-6xl font-semibold text-highlight tracking-tighter">
-              {roundedCount}
-            </motion.span>
-            <span className="font-mono text-xs md:text-sm text-highlight font-light lowercase">
-              x
-            </span>
-          </div>
-          <span className="font-mono text-[9px] md:text-[10px] tracking-widest uppercase text-muted mt-1.5">
-            {speedCounter.label} &mdash; {speedCounter.sublabel}
-          </span>
-        </motion.div>
+      {/* ── CENTER: 3D Cube + Particle Ring ───────────────────────────────── */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative flex items-center justify-center">
 
-        {/* Center Col: Subtitle Roles */}
-        <motion.div
-          className="flex flex-col items-start md:items-center text-left md:text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-        >
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-accent/90">
-            {title}
-          </p>
-          <span className="font-mono text-[9px] tracking-widest uppercase text-muted mt-2 hidden md:inline">
-            Active Core &bull; Available globally
-          </span>
-        </motion.div>
+          {/* Rotating particle ring — SVG */}
+          <motion.div
+            className="absolute"
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 28, ease: "linear" }}
+          >
+            <svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {RING_DOTS.map((d, i) => (
+                <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="white" opacity={d.o} />
+              ))}
+            </svg>
+          </motion.div>
 
-        {/* Right Col: Blinking Cursor Tagline */}
-        <motion.div
-          className="flex justify-start md:justify-end items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] tracking-widest text-muted uppercase">
-              STATUS
-            </span>
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-              className="font-mono text-xs text-highlight bg-white/10 px-2 py-0.5 rounded border border-white/10"
+          {/* Counter-rotating inner ring (slower) */}
+          <motion.div
+            className="absolute"
+            animate={{ rotate: -360 }}
+            transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
+          >
+            <svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {Array.from({ length: 80 }, (_, i) => {
+                const angle = (i / 80) * 2 * Math.PI;
+                const r = 95;
+                const x = 110 + r * Math.cos(angle);
+                const y = 110 + r * Math.sin(angle);
+                const sizes = [0.4, 0.7, 1.0, 0.5];
+                const opacs = [0.15, 0.25, 0.35, 0.2];
+                return (
+                  <circle key={i} cx={x} cy={y}
+                    r={sizes[i % sizes.length]}
+                    fill="white"
+                    opacity={opacs[i % opacs.length]}
+                  />
+                );
+              })}
+            </svg>
+          </motion.div>
+
+          {/* 3D Rotating Cube */}
+          <div className="cube-perspective">
+            <motion.div
+              className="cube-3d"
+              animate={{ rotateY: 360 }}
+              transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+              style={{ rotateX: -15 }}
             >
-              {tagline}
-            </motion.span>
+              <div className="cube-face cube-front"  />
+              <div className="cube-face cube-back"   />
+              <div className="cube-face cube-left"   />
+              <div className="cube-face cube-right"  />
+              <div className="cube-face cube-top"    />
+              <div className="cube-face cube-bottom" />
+            </motion.div>
           </div>
-        </motion.div>
+
+          {/* Thin horizontal crosshair lines through cube center */}
+          <div className="absolute w-[200px] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+          <div className="absolute h-[200px] w-px bg-gradient-to-b from-transparent via-white/20 to-transparent pointer-events-none" />
+        </div>
       </div>
+
+      {/* ── BOTTOM-RIGHT: Tagline ─────────────────────────────────────────── */}
+      <motion.div
+        className="absolute bottom-32 md:bottom-36 right-8 md:right-14 max-w-[220px] md:max-w-xs text-right z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.6 }}
+      >
+        <p className="font-sans text-sm md:text-base text-accent/60 leading-snug">
+          {tagline}
+        </p>
+      </motion.div>
+
+      {/* ── BOTTOM: Philosophy Tag ────────────────────────────────────────── */}
+      <motion.div
+        className="mt-auto relative z-10 w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
+      >
+        <p className="font-sans font-bold text-[5.5vw] md:text-[4.5vw] text-highlight leading-none tracking-tight">
+          {CONFIG.profile.philosophyTag ?? "Design. Develop. Deliver."}
+        </p>
+      </motion.div>
 
     </section>
   );

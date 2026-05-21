@@ -1,6 +1,9 @@
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import Navbar from "@/components/ui/Navbar";
+import CustomCursor from "@/components/ui/CustomCursor";
+import Frame from "@/components/ui/Frame";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,26 +15,34 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const orbitron = Orbitron({
+  variable: "--font-instrument-serif", // Keep variable name same so globals.css doesn't break
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["400"],
+  weight: ["400", "700", "900"],
 });
 
 export const metadata = {
-  title: "Muhammed Ashique | Creative Portfolio",
-  description: "AI | Blockchain | Web Engineer — Interactive Editorial Portfolio",
+  title: "Muhammed Ashique | Full Stack Developer",
+  description: "Full Stack Developer & React Specialist — Creative Portfolio",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-bg text-accent selection:bg-accent selection:text-bg">
+      <body className="min-h-full bg-bg text-accent selection:bg-accent selection:text-bg overflow-x-hidden">
         <SmoothScroll>
+          {/* ── Custom Sci-Fi Outline Frame ── */}
+          <Frame />
+
+          {/* ── Fixed Navbar & Cursor (persists across all routes) ── */}
+          <CustomCursor />
+          <Navbar />
+
+          {/* ── Scrollable page content ── */}
           {children}
         </SmoothScroll>
       </body>

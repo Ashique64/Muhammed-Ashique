@@ -1,5 +1,3 @@
-import Navbar from "@/components/ui/Navbar";
-import CustomCursor from "@/components/ui/CustomCursor";
 import WorkCard from "@/components/work/WorkCard";
 import { CONFIG } from "@/lib/constants";
 
@@ -11,10 +9,6 @@ export const metadata = {
 export default function WorkPage() {
   return (
     <>
-      {/* Interactive Core Overlays */}
-      <CustomCursor />
-      <Navbar />
-
       {/* Main Page Content Wrapper */}
       <main className="w-full min-h-screen bg-bg px-6 py-32 md:px-12 md:py-40 flex flex-col items-center">
         <div className="max-w-4xl w-full flex flex-col">
@@ -24,7 +18,7 @@ export default function WorkPage() {
             <span className="font-mono text-[10px] tracking-widest text-muted uppercase">
               Milestones & Projects
             </span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl italic text-highlight leading-none tracking-tight mt-4">
+            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-highlight leading-none tracking-tight mt-4">
               Work Experience
             </h1>
             <p className="font-sans text-xs md:text-sm text-muted max-w-xl leading-relaxed mt-6">

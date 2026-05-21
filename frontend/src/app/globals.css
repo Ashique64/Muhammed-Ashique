@@ -103,17 +103,41 @@ html.lenis, html.lenis body {
   transform: translateY(20px);
 }
 
-/* Custom scroll bar */
-::-webkit-scrollbar {
-  width: 6px;
+/* ── Custom scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar              { width: 4px; }
+::-webkit-scrollbar-track        { background: var(--color-bg); }
+::-webkit-scrollbar-thumb        { background: #222; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--color-muted); }
+
+/* ── Hide default cursor globally ────────────────────────── */
+html { cursor: none; }
+
+/* ── 3D CSS Cube ──────────────────────────────────────────── */
+.cube-perspective {
+  perspective: 320px;
+  width: 72px;
+  height: 72px;
 }
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
+
+.cube-3d {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  transform-style: preserve-3d;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--color-muted);
-  border-radius: 3px;
+
+.cube-face {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(1px);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-}
+
+.cube-front  { transform: translateZ(36px); }
+.cube-back   { transform: rotateY(180deg) translateZ(36px); }
+.cube-left   { transform: rotateY(-90deg) translateZ(36px); }
+.cube-right  { transform: rotateY(90deg)  translateZ(36px); }
+.cube-top    { transform: rotateX(90deg)  translateZ(36px); }
+.cube-bottom { transform: rotateX(-90deg) translateZ(36px); }
