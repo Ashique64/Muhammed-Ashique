@@ -52,7 +52,7 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p
-          className="font-sans text-sm md:text-base text-accent/70 mt-3 tracking-wide"
+          className="font-display font-normal text-lg md:text-xl text-accent/80 mt-3 tracking-wider"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -133,7 +133,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.6 }}
       >
-        <p className="font-sans text-sm md:text-base text-accent/60 leading-snug">
+        <p className="font-display font-normal text-sm md:text-base text-accent/70 leading-relaxed tracking-wide">
           {tagline}
         </p>
       </motion.div>
@@ -145,7 +145,7 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
       >
-        <p className="font-sans font-bold text-[5.5vw] md:text-[4.5vw] text-highlight leading-none tracking-tight">
+        <p className="font-display font-normal text-right text-[5.5vw] md:text-[4.5vw] text-highlight leading-none tracking-tight">
           {CONFIG.profile.philosophyTag ?? "Design. Develop. Deliver."}
         </p>
       </motion.div>

@@ -1,7 +1,7 @@
 export const CONFIG = {
   profile: {
     name: "MUHAMMED ASHIQUE",
-    title: "Full Stack | React | Node.js",
+    title: "Full Stack Developer",
     tagline: "Here's my take, whether it's building software or products.",
     philosophyTag: "Design. Develop. Deliver.",
     speedCounter: {
