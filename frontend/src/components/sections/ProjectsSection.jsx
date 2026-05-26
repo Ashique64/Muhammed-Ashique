@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
+import Link from "next/link";
+import { LANGUAGE_COLORS } from "@/lib/github";
 
 /* ── Glassmorphism project card with 3D tilt + cursor light ── */
 function ProjectCard({ repo, index }) {
@@ -99,7 +101,7 @@ function ProjectCard({ repo, index }) {
           {/* Topics */}
           {repo.topics?.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
-              {repo.topics.slice(0, 3).map((topic) => (
+              {repo.topics.map((topic) => (
                 <span
                   key={topic}
                   className="font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/6
@@ -113,25 +115,24 @@ function ProjectCard({ repo, index }) {
 
           {/* Footer */}
           <div className="flex items-center gap-4 pt-3 border-t border-white/5">
-            {/* Language dot */}
+            {/* Language dots */}
             {repo.language && (
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: repo.languageColor }}
-                />
-                <span className="font-mono text-[9px] text-muted">{repo.language}</span>
+              <div className="flex items-center gap-3">
+                {repo.language.split(",").map((lang) => {
+                  const trimmedLang = lang.trim();
+                  const officialColor = LANGUAGE_COLORS[trimmedLang] || "#8B949E";
+                  return (
+                    <div key={trimmedLang} className="flex items-center gap-1.5">
+                      <div
+                        className="w-2 h-2 rounded-full shadow-[0_0_6px_rgba(255,255,255,0.05)]"
+                        style={{ background: officialColor }}
+                      />
+                      <span className="font-mono text-[9px] text-muted">{trimmedLang}</span>
+                    </div>
+                  );
+                })}
               </div>
             )}
-            {/* Stars */}
-            <div className="flex items-center gap-1 ml-auto">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              <span className="font-mono text-[9px] text-muted">{repo.stars}</span>
-            </div>
-            {/* Updated */}
-            <span className="font-mono text-[9px] text-muted/50">{repo.updatedAt}</span>
           </div>
         </div>
       </motion.div>
@@ -194,10 +195,30 @@ export default function ProjectsSection({ repos }) {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {repos.map((repo, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-5xl mx-auto">
+          {(repos || []).slice(0, 4).map((repo, i) => (
             <ProjectCard key={repo.id} repo={repo} index={i} />
           ))}
+        </div>
+
+        {/* Centered CTA to Work Page */}
+        <div className="flex justify-center mt-12 md:mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.03 }}
+            className="inline-flex"
+          >
+            <Link
+              href="/work"
+              className="inline-flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] uppercase text-highlight hover:text-black border border-white/10 hover:border-white bg-white/5 hover:bg-white px-8 py-4 rounded-full transition-all duration-300 group shadow-[0_0_20px_rgba(255,255,255,0.02)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer"
+            >
+              View Work Experience
+              <span className="group-hover:translate-x-1.5 transition-transform duration-200">→</span>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>

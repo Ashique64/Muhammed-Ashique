@@ -20,7 +20,7 @@ export default function PageProgress() {
   return (
     <motion.div
       style={{ scaleX, transformOrigin: "left" }}
-      className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-violet-600 via-indigo-500 to-violet-400 z-[99999] origin-left"
+      className="fixed top-0 left-0 right-0 h-[2px] bg-linear-to-r from-violet-600 via-indigo-500 to-violet-400 z-99999 origin-left"
     />
   );
 }

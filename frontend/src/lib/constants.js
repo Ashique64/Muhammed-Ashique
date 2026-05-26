@@ -17,6 +17,12 @@ export const CONFIG = {
       { value: "100%", label: "Client Satisfaction" },
       { value: "∞", label: "Curiosity" },
     ],
+    selectedProjects: [
+      "cozech-agency",
+      "G-G-partner-Expense-Tracker",
+      "DRZ_Data_Collection",
+      "POS-Billing"
+    ],
   },
   
   philosophy: [
