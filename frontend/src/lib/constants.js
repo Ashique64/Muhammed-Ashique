@@ -39,30 +39,16 @@ export const CONFIG = {
       description: "Code is just syntax. Real impact lies in understanding constraints, scaling bottlenecks, and translating human needs into reliable systems."
     },
     {
-      id: "code-need",
-      heading: "Do we need more code..? or actual solutions?",
-      highlight: ["more", "code..?", "solutions?"],
-      description: "The best line of code is the one that didn't need to be written. Minimalism in software design prevents modern clutter."
-    },
-    {
       id: "change",
       heading: "Change is part of building; resilience is surviving it.",
       highlight: ["building;", "surviving"],
       description: "Tech stacks evolve. The ability to abstract core business logic away from volatile dependencies guarantees product longevity."
     },
     {
-      id: "cause-effect",
-      heading: "Cause & Effect.",
-      highlight: ["Cause", "Effect."],
-      description: "Every action has a system reaction. Good engineers optimize local processes; great engineers optimize global systems."
-    },
-    {
       id: "cta",
       heading: "You be the perception, I'll be the tool.",
       highlight: ["perception,", "tool."],
-      description: "Let's build something exceptional together.",
-      ctaLink: "/about",
-      ctaLabel: "Let's Connect"
+      description: "Let's build something exceptional together."
     }
   ],
 
