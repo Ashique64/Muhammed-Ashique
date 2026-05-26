@@ -12,7 +12,7 @@ export const CONFIG = {
       sublabel: "Optimized Performance"
     },
     stats: [
-      { value: "3+", label: "Years Building" },
+      { value: "2+", label: "Years Building" },
       { value: "20+", label: "Projects Shipped" },
       { value: "100%", label: "Client Satisfaction" },
       { value: "∞", label: "Curiosity" },
@@ -98,41 +98,37 @@ export const CONFIG = {
   about: {
     photo: "/avatar.png",
     bio: [
-      "I am a Full Stack Developer and React Specialist passionate about crafting highly responsive, performant, and pixel-perfect web experiences.",
-      "My development philosophy revolves around architectural minimalism and clean code standards. I believe digital interfaces should feel lightweight, run with hardware acceleration, and look aesthetically flawless.",
-      "With a strong foundation in modern JavaScript, React ecosystem tooling (like Vite), and Tailwind CSS styling systems, I strive to turn complex designs into functional, highly-intuitive user experiences."
+      "I am a Full Stack Developer and React Specialist obsessed with engineering high-performance, pixel-perfect digital experiences that bridge the gap between design and technology.",
+      "My development philosophy is rooted in architectural minimalism. I believe modern web applications should be aggressively optimized, visually stunning, and run with flawless hardware acceleration.",
+      "Leveraging the cutting edge of the React ecosystem, modern JavaScript, and advanced CSS frameworks, I transform complex architectural concepts into highly intuitive, interactive interfaces."
     ],
     socials: [
       { name: "GitHub", url: "https://github.com/Ashique64", username: "@Ashique64", icon: "github" },
       { name: "LinkedIn", url: "https://www.linkedin.com/in/muhammed-ashique-k-p-9a03b0267/", username: "Muhammed Ashique K P", icon: "linkedin" },
-      { name: "Email", url: "mailto:ashiquekp64@gmail.com", username: "ashiquekp64@gmail.com", icon: "email" },
-      { name: "Twitter / X", url: "https://x.com", username: "@Ashique64", icon: "twitter" }
+      { name: "Email", url: "mailto:ashique200899@gmail.com", username: "ashique200899@gmail.com", icon: "email" },
+      { name: "WhatsApp", url: "https://wa.me/91860128064", username: "+91 860128064", icon: "whatsapp" }
     ]
   },
 
   skills: [
-    // Core Frontend
-    { name: "React",      category: "frontend", color: "#61DAFB", size: 1.4 },
-    { name: "Next.js",   category: "frontend", color: "#FFFFFF", size: 1.3 },
-    { name: "TypeScript",category: "frontend", color: "#3178C6", size: 1.2 },
-    { name: "JavaScript",category: "frontend", color: "#F7DF1E", size: 1.2 },
-    { name: "Tailwind",  category: "frontend", color: "#38BDF8", size: 1.1 },
-    { name: "GSAP",      category: "frontend", color: "#88CE02", size: 1.0 },
-    // Backend
-    { name: "Node.js",   category: "backend",  color: "#339933", size: 1.3 },
-    { name: "Express",   category: "backend",  color: "#FFFFFF", size: 1.1 },
-    { name: "Python",    category: "backend",  color: "#3776AB", size: 1.1 },
-    { name: "REST APIs", category: "backend",  color: "#FF6B35", size: 1.0 },
-    // Database
-    { name: "MongoDB",   category: "database", color: "#47A248", size: 1.1 },
-    { name: "SQL",       category: "database", color: "#4479A1", size: 1.0 },
-    // Tools
-    { name: "Git",       category: "tools",    color: "#F05032", size: 1.1 },
-    { name: "Docker",    category: "tools",    color: "#2496ED", size: 1.0 },
-    { name: "Vercel",    category: "tools",    color: "#FFFFFF", size: 0.9 },
-    // AI / Blockchain
-    { name: "AI/ML",     category: "emerging", color: "#A78BFA", size: 1.2 },
-    { name: "Web3",      category: "emerging", color: "#F59E0B", size: 1.1 },
-    { name: "Three.js",  category: "emerging", color: "#049EF4", size: 1.0 },
+    { name: "Python",       category: "backend",  color: "#3776AB", size: 1.4, icon: "python" },
+    { name: "Next.js",      category: "frontend", color: "#FFFFFF", size: 1.3, icon: "nextjs" },
+    { name: "React",        category: "frontend", color: "#61DAFB", size: 1.4, icon: "react" },
+    { name: "Django",       category: "backend",  color: "#10B981", size: 1.2, icon: "django" },
+    { name: "JavaScript",   category: "frontend", color: "#F7DF1E", size: 1.2, icon: "javascript" },
+    { name: "PostgreSQL",   category: "database", color: "#4169E1", size: 1.0, icon: "postgresql" },
+    { name: "Supabase",     category: "database", color: "#3ECF8E", size: 1.0, icon: "supabase" },
+    { name: "Git",          category: "tools",    color: "#F05032", size: 1.1, icon: "git" },
+    { name: "Tailwind CSS", category: "frontend", color: "#38BDF8", size: 1.1, icon: "tailwindcss" },
+    { name: "GSAP",         category: "frontend", color: "#88CE02", size: 1.0, icon: "greensock" },
+    { name: "SCSS",         category: "frontend", color: "#CC6699", size: 1.1, icon: "sass" },
+    { name: "Firebase",     category: "database", color: "#FFCA28", size: 1.0, icon: "firebase" },
+    
+    // Additional Skills
+    { name: "HTML",         category: "frontend", color: "#E34F26", size: 1.1, icon: "html5" },
+    { name: "Postman",      category: "tools",    color: "#FF6C37", size: 1.0, icon: "postman" },
+    { name: "Bootstrap",    category: "frontend", color: "#7952B3", size: 1.1, icon: "bootstrap" },
+    { name: "Node.js",      category: "backend",  color: "#339933", size: 1.2, icon: "nodedotjs" },
+    { name: "Vercel",       category: "tools",    color: "#000000", size: 1.0, icon: "vercel" },
   ],
 };

@@ -2,6 +2,12 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { FaGithub, FaLinkedin, FaEnvelope, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import { 
+  SiPython, SiNextdotjs, SiReact, SiDjango, SiJavascript, SiHtml5, SiTailwindcss, 
+  SiSass, SiBootstrap, SiGreensock, SiNodedotjs, SiPostgresql, SiFirebase, SiSupabase, 
+  SiGit, SiVercel, SiPostman 
+} from "react-icons/si";
 import { CONFIG } from "@/lib/constants";
 
 /* ── Animated counter ── */
@@ -45,8 +51,30 @@ function StatCounter({ value, label, delay = 0 }) {
   );
 }
 
+const SkillIcons = {
+  python: SiPython,
+  nextjs: SiNextdotjs,
+  react: SiReact,
+  django: SiDjango,
+  javascript: SiJavascript,
+  html5: SiHtml5,
+  tailwindcss: SiTailwindcss,
+  sass: SiSass,
+  bootstrap: SiBootstrap,
+  greensock: SiGreensock,
+  nodedotjs: SiNodedotjs,
+  postgresql: SiPostgresql,
+  firebase: SiFirebase,
+  supabase: SiSupabase,
+  git: SiGit,
+  vercel: SiVercel,
+  postman: SiPostman,
+};
+
 /* ── Tech stack icon badge ── */
-function TechBadge({ name, color, delay }) {
+function TechBadge({ name, color, delay, iconName }) {
+  const Icon = SkillIcons[iconName];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -54,10 +82,11 @@ function TechBadge({ name, color, delay }) {
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay }}
       whileHover={{ scale: 1.08, y: -3 }}
-      className="px-3 py-1.5 rounded-full border border-white/8 bg-surface/30 font-mono text-[10px] tracking-widest text-muted hover:text-accent hover:border-white/20 transition-colors duration-300 cursor-default"
+      className="flex items-center justify-center gap-2 px-2 py-1.5 h-[34px] rounded-full border border-white/8 bg-surface/30 font-mono text-[9px] sm:text-[10px] tracking-widest text-muted hover:text-accent hover:border-white/20 transition-colors duration-300 cursor-default w-full overflow-hidden"
       style={{ borderColor: `${color}22` }}
     >
-      <span style={{ color }}>{name}</span>
+      {Icon && <Icon size={12} style={{ color }} className="shrink-0" />}
+      <span style={{ color }} className="whitespace-nowrap truncate">{name}</span>
     </motion.div>
   );
 }
@@ -131,9 +160,9 @@ export default function AboutSection() {
           </motion.div>
 
           {/* Tech badges */}
-          <motion.div variants={childVariants} className="flex flex-wrap gap-2">
+          <motion.div variants={childVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {topSkills.map((skill, i) => (
-              <TechBadge key={skill.name} name={skill.name} color={skill.color} delay={i * 0.04} />
+              <TechBadge key={skill.name} name={skill.name} color={skill.color} delay={i * 0.04} iconName={skill.icon} />
             ))}
           </motion.div>
         </motion.div>
@@ -165,7 +194,7 @@ export default function AboutSection() {
           {/* Social links */}
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {socials.map((s) => (
               <motion.a
@@ -175,14 +204,23 @@ export default function AboutSection() {
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col p-4 border border-white/6 rounded-xl bg-surface/10 hover:bg-surface/30 hover:border-white/15 transition-all duration-300 group"
-                whileHover={{ y: -3 }}
+                className="relative flex flex-col sm:flex-row items-center sm:justify-start justify-center gap-3 px-5 py-4 border border-white/5 rounded-2xl bg-surface/20 hover:bg-surface/40 hover:border-violet-500/30 overflow-hidden transition-all duration-500 group shadow-lg hover:shadow-violet-500/10"
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="font-mono text-[9px] tracking-widest text-muted uppercase group-hover:text-highlight transition-colors">
+                {/* Subtle internal glow on hover */}
+                <div className="absolute inset-0 bg-linear-to-br from-violet-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg" />
+                
+                <div className="relative z-10 text-muted group-hover:text-white transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(167,139,250,0.5)]">
+                  {s.icon === 'github' && <FaGithub size={20} />}
+                  {s.icon === 'linkedin' && <FaLinkedin size={20} />}
+                  {s.icon === 'email' && <FaEnvelope size={20} />}
+                  {s.icon === 'twitter' && <FaTwitter size={20} />}
+                  {s.icon === 'whatsapp' && <FaWhatsapp size={20} />}
+                </div>
+                
+                <span className="relative z-10 font-mono text-[10px] tracking-widest text-muted/70 uppercase group-hover:text-highlight transition-colors duration-500">
                   {s.name}
-                </span>
-                <span className="font-sans text-xs text-accent/80 mt-2 group-hover:text-highlight transition-colors truncate">
-                  {s.username}
                 </span>
               </motion.a>
             ))}
