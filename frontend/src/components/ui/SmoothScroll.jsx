@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function SmoothScroll({ children }) {
   const lenisRef = useRef(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Register GSAP ScrollTrigger if running in browser
@@ -43,6 +45,20 @@ export default function SmoothScroll({ children }) {
       gsap.ticker.remove(tickerUpdate);
     };
   }, []);
+
+  // Recalculate dimensions and scroll to top on every route transition
+  useEffect(() => {
+    if (!lenisRef.current) return;
+    
+    // Reset scroll position to top
+    lenisRef.current.scrollTo(0, { immediate: true });
+    
+    // Force recalculation of page/viewport heights
+    lenisRef.current.resize();
+    
+    // Refresh ScrollTrigger tracking
+    ScrollTrigger.refresh();
+  }, [pathname]);
 
   return <>{children}</>;
 }

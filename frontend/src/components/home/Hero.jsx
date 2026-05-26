@@ -1,35 +1,50 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import dynamic from "next/dynamic";
 import { CONFIG } from "@/lib/constants";
+import { useMouseParallax } from "@/hooks/useMouseParallax";
 
-/* ─── Pre-computed particle ring dots (deterministic = no hydration issues) ── */
-const RING_DOTS = Array.from({ length: 220 }, (_, i) => {
-  const angle  = (i / 220) * 2 * Math.PI;
-  // Slight radius variance for a "cloud" feel
-  const radii  = [128, 131, 126, 133, 129, 135, 127, 132, 130, 128];
-  const r      = radii[i % radii.length];
-  const x      = 150 + r * Math.cos(angle);
-  const y      = 150 + r * Math.sin(angle);
-  const sizes  = [0.5, 0.9, 1.3, 0.6, 1.1, 0.7, 1.5, 0.8, 1.0, 0.6];
-  const opacs  = [0.35, 0.65, 0.9, 0.5, 0.75, 0.4, 0.85, 0.55, 0.7, 0.45];
-  return { x, y, r: sizes[i % sizes.length], o: opacs[i % opacs.length] };
-});
+const PrismCore = dynamic(() => import("@/components/3d/PrismCore"), { ssr: false });
+
+
+/* ── Deterministic ambient dots ── */
+const AMBIENT_DOTS = Array.from({ length: 28 }, (_, i) => ({
+  id: i,
+  left: `${((i * 37.3) % 90) + 5}%`,
+  top:  `${((i * 59.7) % 85) + 5}%`,
+  size: `${1 + (i % 3)}px`,
+  opacity: 0.04 + (i % 5) * 0.025,
+}));
 
 export default function Hero() {
-  const { name, title, speedCounter, tagline } = CONFIG.profile;
+  const { name, title, tagline, philosophyTag } = CONFIG.profile;
+  const [mounted, setMounted]   = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const mouse = useMouseParallax(0.5);
 
-  // ── Mounted guard: prevents Framer Motion SSR hydration mismatch ──────────
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
-  // Return a plain black screen on the server — no animations, no mismatch
+  // ── SSR & pre-hydration placeholder ─────────────────────────────────────
+  // NOTE: intentionally no scroll-based motion values here — they caused the
+  // "Target ref is defined but not hydrated" error in Framer Motion v12 when
+  // useScroll({ target: ref }) was called while the ref was null during SSR.
   if (!mounted) {
     return (
-      <section className="relative w-full min-h-screen bg-bg flex flex-col px-8 md:px-12 pt-8 pb-10">
+      <section className="relative w-full min-h-screen bg-bg overflow-hidden flex flex-col px-8 md:px-12 pt-8 pb-10">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-96 h-96 rounded-full bg-violet-900/10 blur-3xl" />
+        </div>
         <div className="relative z-10 mt-6 md:mt-8">
-          <h1 className="font-display text-[8vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase opacity-0">
+          <h1 className="font-display text-[9vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase opacity-0">
             {name}
           </h1>
         </div>
@@ -40,116 +55,85 @@ export default function Hero() {
   return (
     <section className="relative w-full min-h-screen bg-bg overflow-hidden flex flex-col px-8 md:px-12 pt-8 pb-10">
 
-      {/* ── TOP-LEFT: Name + Subtitle ─────────────────────────────────────── */}
+      {/* ── Background glow + ambient dots (client-only) ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(109,40,217,0.14) 0%, transparent 70%)" }}
+        />
+        {AMBIENT_DOTS.map((dot) => (
+          <div
+            key={dot.id}
+            className="absolute rounded-full bg-white"
+            style={{ left: dot.left, top: dot.top, width: dot.size, height: dot.size, opacity: dot.opacity }}
+          />
+        ))}
+      </div>
+
+      {/* ── 3D NeuralCore Canvas — centered, pointer-events-none ── */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div style={{ width: isMobile ? 400 : 800, height: isMobile ? 400 : 800 }}>
+          <Canvas
+            camera={{ position: [0, 0, 3.5], fov: 55 }}
+            dpr={isMobile ? [1, 1.5] : [1, 2]}
+            gl={{ antialias: true, alpha: true }}
+            style={{ width: "100%", height: "100%" }}
+          >
+            <Suspense fallback={null}>
+              <PrismCore mouseX={mouse.x} mouseY={mouse.y} isMobile={isMobile} />
+            </Suspense>
+          </Canvas>
+        </div>
+      </div>
+
+      {/* ── Top-left: Name + Title ── */}
       <div className="relative z-10 mt-6 md:mt-8">
         <motion.h1
-          className="font-display text-[8vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase"
-          initial={{ opacity: 0, y: 30 }}
+          className="font-display text-[9vw] md:text-[6.5vw] leading-none tracking-tight text-highlight uppercase"
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
           {name}
         </motion.h1>
-
         <motion.p
-          className="font-display font-normal text-lg md:text-xl text-accent/80 mt-3 tracking-wider"
+          className="font-mono text-xs md:text-sm text-accent/60 mt-3 tracking-[0.25em] uppercase"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           {title}
         </motion.p>
       </div>
 
-      {/* ── CENTER: 3D Cube + Particle Ring ───────────────────────────────── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="relative flex items-center justify-center">
-
-          {/* Rotating particle ring — SVG */}
-          <motion.div
-            className="absolute"
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 28, ease: "linear" }}
-          >
-            <svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {RING_DOTS.map((d, i) => (
-                <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="white" opacity={d.o} />
-              ))}
-            </svg>
-          </motion.div>
-
-          {/* Counter-rotating inner ring (slower) */}
-          <motion.div
-            className="absolute"
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 45, ease: "linear" }}
-          >
-            <svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {Array.from({ length: 80 }, (_, i) => {
-                const angle = (i / 80) * 2 * Math.PI;
-                const r = 95;
-                const x = 110 + r * Math.cos(angle);
-                const y = 110 + r * Math.sin(angle);
-                const sizes = [0.4, 0.7, 1.0, 0.5];
-                const opacs = [0.15, 0.25, 0.35, 0.2];
-                return (
-                  <circle key={i} cx={x} cy={y}
-                    r={sizes[i % sizes.length]}
-                    fill="white"
-                    opacity={opacs[i % opacs.length]}
-                  />
-                );
-              })}
-            </svg>
-          </motion.div>
-
-          {/* 3D Rotating Cube */}
-          <div className="cube-perspective">
-            <motion.div
-              className="cube-3d"
-              animate={{ rotateY: 360 }}
-              transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-              style={{ rotateX: -15 }}
-            >
-              <div className="cube-face cube-front"  />
-              <div className="cube-face cube-back"   />
-              <div className="cube-face cube-left"   />
-              <div className="cube-face cube-right"  />
-              <div className="cube-face cube-top"    />
-              <div className="cube-face cube-bottom" />
-            </motion.div>
-          </div>
-
-          {/* Thin horizontal crosshair lines through cube center */}
-          <div className="absolute w-[200px] h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-          <div className="absolute h-[200px] w-px bg-gradient-to-b from-transparent via-white/20 to-transparent pointer-events-none" />
-        </div>
-      </div>
-
-      {/* ── BOTTOM-RIGHT: Tagline ─────────────────────────────────────────── */}
+      {/* ── Bottom-right: Tagline ── */}
       <motion.div
-        className="absolute bottom-32 md:bottom-36 right-8 md:right-14 max-w-[220px] md:max-w-xs text-right z-10"
+        className="absolute bottom-28 md:bottom-32 right-8 md:right-14 max-w-[200px] md:max-w-xs text-right z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.6 }}
+        transition={{ duration: 1.2, delay: 0.8 }}
       >
-        <p className="font-display font-normal text-sm md:text-base text-accent/70 leading-relaxed tracking-wide">
+        <p className="font-display font-normal text-sm md:text-base text-accent/60 leading-relaxed tracking-wide">
           {tagline}
         </p>
       </motion.div>
 
-      {/* ── BOTTOM: Philosophy Tag ────────────────────────────────────────── */}
+      {/* ── Bottom: Philosophy tag ── */}
       <motion.div
         className="mt-auto relative z-10 w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
+        transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
       >
-        <p className="font-display font-normal text-right text-[5.5vw] md:text-[4.5vw] text-highlight leading-none tracking-tight">
-          {CONFIG.profile.philosophyTag ?? "Design. Develop. Deliver."}
+        <p className="font-display font-normal text-right text-[5.5vw] md:text-[4vw] text-highlight/90 leading-none tracking-tight">
+          {philosophyTag ?? "Design. Develop. Deliver."}
         </p>
       </motion.div>
 
+
+
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-bg to-transparent pointer-events-none z-10" />
     </section>
   );
 }

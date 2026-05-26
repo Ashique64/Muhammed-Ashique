@@ -74,6 +74,7 @@ export default function AboutPage() {
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {socials.map((link) => (
               <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer"
+                suppressHydrationWarning
                 className="flex flex-col p-5 border border-white/5 hover:border-white/12 bg-surface/15 hover:bg-surface/35 rounded-xl transition-all duration-300 group shadow-md"
               >
                 <span className="font-mono text-[9px] tracking-widest text-muted uppercase group-hover:text-highlight transition-colors">
