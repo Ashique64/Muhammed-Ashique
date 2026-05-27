@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 
 const CAT_COLORS = {
   frontend: "#22d3ee", // Cyan
@@ -59,6 +59,208 @@ const SKILLS_DATA = [
 
 const CATEGORIES = ["ALL", "FRONTEND", "BACKEND", "DATABASE", "TOOLS", "AI"];
 
+/* ── Subtle Pure JS Starfield Background Canvas ── */
+function StarfieldCanvas() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animationFrameId;
+
+    let w = (canvas.width = window.innerWidth);
+    let h = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      w = (canvas.width = window.innerWidth);
+      h = (canvas.height = window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Create faint, drifting cosmic stars
+    const stars = Array.from({ length: 80 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: Math.random() * 0.8 + 0.2,
+      alpha: Math.random() * 0.3 + 0.08,
+      speed: Math.random() * 0.03 + 0.008,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      
+      stars.forEach((star) => {
+        ctx.fillStyle = `rgba(167, 139, 250, ${star.alpha})`; // Lavender/purple stars matching your accent glow
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.y += star.speed;
+        if (star.y > h) {
+          star.y = 0;
+          star.x = Math.random() * w;
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 1,
+      }}
+    />
+  );
+}
+
+/* ── Interactive Skill Card with 3D Tilt + Cursor spotlight ── */
+function SkillCard({ skill, activeCategory, isLoaded }) {
+  const cardRef = useRef(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Tilt transform mappings
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]);
+
+  const handleMouseMove = (e) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const lightX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"]);
+  const lightY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"]);
+
+  const isMatch = activeCategory === "ALL" || skill.category.toUpperCase() === activeCategory;
+  const color = CAT_COLORS[skill.category] || "#ffffff";
+  const badgeText = CAT_BADGES[skill.category] || "FE";
+  const filledDots = Math.round(skill.level / 10);
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="skill-card-hover relative flex flex-col justify-between h-[135px] p-[18px] border border-white/5 bg-transparent overflow-hidden group cursor-pointer transition-all duration-300"
+      style={{
+        display: isMatch ? "flex" : "none",
+        margin: "-0.5px", // Share grid borders cleanly
+        boxSizing: "border-box",
+        rotateX: isMatch ? rotateX : 0,
+        rotateY: isMatch ? rotateY : 0,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+    >
+      {/* Dynamic Cursor Spotlight Overlay */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
+        style={{
+          background: useTransform(
+            [lightX, lightY],
+            ([x, y]) => `radial-gradient(150px circle at ${x} ${y}, ${color}1a, transparent 70%)`
+          ),
+        }}
+      />
+
+      {/* Card border glow on hover */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+        style={{ boxShadow: `inset 0 0 0 1px ${color}33` }}
+      />
+
+      {/* Content wrapper layered on top of spotlight */}
+      <div className="relative z-10 flex flex-col justify-between h-full w-full pointer-events-none">
+        {/* 1. Skill Name & Category badge row */}
+        <div className="flex justify-between items-center">
+          <span className="font-mono text-sm font-bold text-highlight tracking-wide">
+            {skill.name}
+          </span>
+          
+          {/* Category badge */}
+          <span
+            className="font-mono text-[8px] font-bold tracking-wider py-[2px] px-[6px]"
+            style={{
+              border: `1px solid ${color}33`,
+              backgroundColor: `${color}11`,
+              color: color,
+              borderRadius: "1px",
+              textTransform: "uppercase"
+            }}
+          >
+            {badgeText}
+          </span>
+        </div>
+
+        {/* 2. 2px thin animated progress bar */}
+        <div>
+          <div className="h-[2px] w-full bg-white/5">
+            <div
+              className="progress-bar h-full"
+              style={{
+                width: isLoaded && isMatch ? `${skill.level}%` : "0%",
+                backgroundColor: color,
+                boxShadow: `0 0 6px ${color}88`,
+                transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
+              }}
+            />
+          </div>
+        </div>
+
+        {/* 3. Bottom row: Proficiency percentage & Dot-matrix ratings */}
+        <div className="flex justify-between items-center">
+          <span className="font-mono text-[9px] font-bold text-muted tracking-wide">
+            {skill.level}% <span className="text-white/20 text-[8px]">PRO</span>
+          </span>
+
+          {/* 10-dot indicator */}
+          <div className="flex gap-[4.5px]">
+            {Array.from({ length: 10 }).map((_, idx) => {
+              const isFilled = idx < filledDots;
+              return (
+                <div
+                  key={idx}
+                  className="w-1 h-1 rounded-full transition-all duration-300"
+                  style={{
+                    border: isFilled ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
+                    backgroundColor: isFilled ? color : "transparent",
+                    boxShadow: isFilled ? `0 0 4px ${color}` : "none"
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function SkillsSection() {
   const [activeCategory, setActiveCategory] = useState("ALL");
   const [isLoaded, setIsLoaded] = useState(false);
@@ -110,6 +312,9 @@ export default function SkillsSection() {
           background: "radial-gradient(ellipse 60% 40% at 20% 60%, rgba(79,70,229,0.05) 0%, transparent 70%)",
         }}
       />
+
+      {/* Cosmic Parallax Starfield Overlay (Faint & drifting) */}
+      <StarfieldCanvas />
 
       {/* Main Terminal Wrapper */}
       <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col justify-between flex-1">
@@ -170,95 +375,22 @@ export default function SkillsSection() {
         <div
           className="grid gap-0 border border-white/5 bg-bg"
           style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))"
+            gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
+            perspective: 800,
           }}
         >
-          {SKILLS_DATA.map((skill) => {
-            const isMatch = activeCategory === "ALL" || skill.category.toUpperCase() === activeCategory;
-            const color = CAT_COLORS[skill.category] || "#ffffff";
-            const badgeText = CAT_BADGES[skill.category] || "FE";
-            
-            // 10-dot system calculations
-            const filledDots = Math.round(skill.level / 10);
-
-            return (
-              <div
-                key={skill.name}
-                className="skill-card-hover flex flex-col justify-between h-[135px] p-[18px] border border-white/5 bg-transparent transition-all duration-300"
-                style={{
-                  display: isMatch ? "flex" : "none",
-                  margin: "-0.5px", // Share grid borders cleanly
-                  boxSizing: "border-box"
-                }}
-              >
-                {/* 1. Skill Name & Category badge row */}
-                <div className="flex justify-between items-center">
-                  <span className="font-mono text-sm font-bold text-highlight tracking-wide">
-                    {skill.name}
-                  </span>
-                  
-                  {/* Category badge */}
-                  <span
-                    className="font-mono text-[8px] font-bold tracking-wider py-[2px] px-[6px]"
-                    style={{
-                      border: `1px solid ${color}33`,
-                      backgroundColor: `${color}11`,
-                      color: color,
-                      borderRadius: "1px",
-                      textTransform: "uppercase"
-                    }}
-                  >
-                    {badgeText}
-                  </span>
-                </div>
-
-                {/* 2. 2px thin animated progress bar */}
-                <div>
-                  <div className="h-[2px] w-full bg-white/5">
-                    <div
-                      className="progress-bar h-full"
-                      style={{
-                        width: isLoaded && isMatch ? `${skill.level}%` : "0%",
-                        backgroundColor: color,
-                        boxShadow: `0 0 6px ${color}88`,
-                        transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* 3. Bottom row: Proficiency percentage & Dot-matrix ratings */}
-                <div className="flex justify-between items-center">
-                  <span className="font-mono text-[9px] font-bold text-muted tracking-wide">
-                    {skill.level}% <span className="text-white/20 text-[8px]">PRO</span>
-                  </span>
-
-                  {/* 10-dot indicator */}
-                  <div className="flex gap-[4.5px]">
-                    {Array.from({ length: 10 }).map((_, idx) => {
-                      const isFilled = idx < filledDots;
-                      return (
-                        <div
-                          key={idx}
-                          className="w-1 h-1 rounded-full transition-all duration-300"
-                          style={{
-                            border: isFilled ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
-                            backgroundColor: isFilled ? color : "transparent",
-                            boxShadow: isFilled ? `0 0 4px ${color}` : "none"
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-
-              </div>
-            );
-          })}
+          {SKILLS_DATA.map((skill) => (
+            <SkillCard
+              key={skill.name}
+              skill={skill}
+              activeCategory={activeCategory}
+              isLoaded={isLoaded}
+            />
+          ))}
         </div>
 
         {/* Brutalist Footer Row */}
-        <div className="flex justify-start items-center mt-8 font-mono text-[9px] text-muted tracking-widest uppercase">
+        <div className="flex justify-between items-center mt-12 pt-6 border-t border-white/5 font-mono text-[9px] text-muted tracking-widest uppercase">
           <span>always learning</span>
         </div>
 
