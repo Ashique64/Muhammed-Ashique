@@ -174,7 +174,7 @@ export default function ProjectsSection({ repos }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               Selected <br />
-              <span className="text-accent/40">Work</span>
+              <span className="text-accent/40">Work.</span>
             </motion.h2>
           </div>
           <motion.a
