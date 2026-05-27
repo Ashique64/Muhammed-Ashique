@@ -59,7 +59,7 @@ const SKILLS_DATA = [
 
 const CATEGORIES = ["ALL", "FRONTEND", "BACKEND", "DATABASE", "TOOLS", "AI"];
 
-/* ── Subtle Pure JS Starfield Background Canvas ── */
+/* ── Subtle Pure JS Swirling Galaxy Background Canvas ── */
 function StarfieldCanvas() {
   const canvasRef = useRef(null);
 
@@ -78,28 +78,101 @@ function StarfieldCanvas() {
     };
     window.addEventListener("resize", handleResize);
 
-    // Create faint, drifting cosmic stars
-    const stars = Array.from({ length: 80 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: Math.random() * 0.8 + 0.2,
-      alpha: Math.random() * 0.3 + 0.08,
-      speed: Math.random() * 0.03 + 0.008,
-    }));
+    const colors = [
+      "167, 139, 250", // Lavender
+      "34, 211, 238",  // Cyan
+      "99, 102, 241",  // Indigo
+      "74, 222, 128",  // Emerald/Green
+    ];
+
+    // Swirling galaxy center
+    let cx = w / 2;
+    let cy = h / 2;
+
+    // Create swirling cosmic stars
+    const stars = Array.from({ length: 140 }, () => {
+      const distance = Math.random() * (Math.max(w, h) * 0.8) + 20;
+      return {
+        distance,
+        angle: Math.random() * Math.PI * 2,
+        size: Math.random() * 1.3 + 0.3,
+        baseAlpha: Math.random() * 0.28 + 0.08,
+        // Orbital speed inversely proportional to distance to mimic gravity / galaxy dynamics
+        speed: (Math.random() * 0.0002 + 0.0001) * (150 / Math.max(50, distance)) + 0.00008,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+      };
+    });
+
+    // Create soft, glowing cosmic nebulae / gas clouds
+    const nebulae = Array.from({ length: 5 }, (_, i) => {
+      const distance = Math.random() * (Math.max(w, h) * 0.4) + 50;
+      return {
+        distance,
+        angle: Math.random() * Math.PI * 2,
+        radius: Math.random() * 180 + 120, // Large soft gas clouds
+        speed: (Math.random() * 0.00005 + 0.00002) * (100 / distance) + 0.00002,
+        color: colors[i % colors.length],
+        pulseSpeed: Math.random() * 0.005 + 0.002,
+        pulseOffset: Math.random() * Math.PI * 2,
+      };
+    });
 
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
       
-      stars.forEach((star) => {
-        ctx.fillStyle = `rgba(167, 139, 250, ${star.alpha})`; // Lavender/purple stars matching your accent glow
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
+      cx = w / 2;
+      cy = h / 2;
 
-        star.y += star.speed;
-        if (star.y > h) {
-          star.y = 0;
-          star.x = Math.random() * w;
+      // 1. Draw soft glowing space Nebulae/Gas clouds first (background layer)
+      nebulae.forEach((neb) => {
+        neb.angle += neb.speed;
+        const x = cx + Math.cos(neb.angle) * neb.distance;
+        const y = cy + Math.sin(neb.angle) * neb.distance;
+
+        // Pulsate radius slightly
+        const pulse = 1 + 0.08 * Math.sin(Date.now() * neb.pulseSpeed + neb.pulseOffset);
+        const r = neb.radius * pulse;
+
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        // Extremely faint opacity (alpha 0.025 to 0.0) so it remains subtle and premium
+        grad.addColorStop(0, `rgba(${neb.color}, 0.025)`);
+        grad.addColorStop(0.5, `rgba(${neb.color}, 0.008)`);
+        grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 2. Draw swirling galaxy stars (foreground layer)
+      stars.forEach((star) => {
+        // Increment angle to orbit
+        star.angle += star.speed;
+
+        // Convert polar coordinates (distance, angle) back to cartesian (x, y) relative to center
+        const x = cx + Math.cos(star.angle) * star.distance;
+        const y = cy + Math.sin(star.angle) * star.distance;
+
+        // Twinkle factor using sine wave
+        const twinkle = Math.sin(Date.now() * star.twinkleSpeed + star.twinkleOffset);
+        const currentAlpha = Math.max(0.04, star.baseAlpha + twinkle * 0.06);
+
+        ctx.fillStyle = `rgba(${star.color}, ${currentAlpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw a tiny subtle light trail/shimmer for slightly bigger/brighter stars
+        if (star.size > 1.2) {
+          ctx.shadowColor = `rgba(${star.color}, ${currentAlpha})`;
+          ctx.shadowBlur = 4;
+          ctx.beginPath();
+          ctx.arc(x, y, star.size * 0.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0; // reset
         }
       });
 

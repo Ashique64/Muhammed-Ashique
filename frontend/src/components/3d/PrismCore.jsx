@@ -162,12 +162,15 @@ export default function PrismCore({ mouseX = 0, mouseY = 0, isMobile = false }) 
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
     
-    groupRef.current.position.y = Math.sin(t) * 0.1;
-    groupRef.current.rotation.y = Math.sin(t * 0.2) * 0.1;
+    // Smooth auto-floating
+    groupRef.current.position.y = Math.sin(t * 0.8) * 0.08;
     
-    // Smooth Mouse parallax
-    groupRef.current.rotation.y += mouseX * 0.05;
-    groupRef.current.rotation.x += mouseY * 0.03;
+    // Symmetrical, non-accumulating base rotations + mouse parallax offsets
+    const baseRotY = t * 0.08;                    // Beautiful continuous auto-spin on Y
+    const baseRotX = Math.sin(t * 0.1) * 0.08;    // Subtle vertical oscillation on X
+    
+    groupRef.current.rotation.y = baseRotY + mouseX * 0.45;
+    groupRef.current.rotation.x = baseRotX + mouseY * 0.25;
   });
 
   return (
