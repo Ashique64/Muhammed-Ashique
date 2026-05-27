@@ -1,167 +1,268 @@
 "use client";
 
-import { useRef, Suspense, useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-import { CONFIG } from "@/lib/constants";
-import { useMouseParallax } from "@/hooks/useMouseParallax";
 
-const TechGalaxy = dynamic(() => import("@/components/3d/TechGalaxy"), { ssr: false });
+const CAT_COLORS = {
+  frontend: "#22d3ee", // Cyan
+  backend: "#a78bfa",  // Purple/Violet
+  database: "#f97316", // Orange
+  tools: "#facc15",    // Gold/Yellow
+  ai: "#4ade80"        // Green
+};
 
-/* Category filter button */
-function FilterBtn({ label, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`font-mono text-[9px] tracking-[0.25em] uppercase px-4 py-2 rounded-full border transition-all duration-300 ${
-        active
-          ? "border-violet-500/60 text-violet-300 bg-violet-900/20"
-          : "border-white/8 text-muted hover:border-white/20 hover:text-accent"
-      }`}
-    >
-      {label}
-    </button>
-  );
-}
+const CAT_BADGES = {
+  frontend: "FE",
+  backend: "BE",
+  database: "DB",
+  tools: "TOOL",
+  ai: "AI"
+};
 
-/* Mobile skill list (flat grid instead of 3D) */
-function MobileSkillGrid({ skills }) {
-  return (
-    <div className="grid grid-cols-3 gap-3 w-full mt-8">
-      {skills.map((skill, i) => (
-        <motion.div
-          key={skill.name}
-          initial={{ opacity: 0, scale: 0.85 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: i * 0.04, duration: 0.4 }}
-          className="flex flex-col items-center gap-2 p-3 rounded-xl border border-white/6 bg-surface/10"
-        >
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ background: skill.color, boxShadow: `0 0 8px ${skill.color}55` }}
-          />
-          <span className="font-mono text-[9px] tracking-wider text-muted text-center">{skill.name}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
+const SKILLS_DATA = [
+  { name: "React.js",                  level: 92, category: "frontend" },
+  { name: "Python",                    level: 85, category: "backend" },
+  { name: "PostgreSQL",                level: 82, category: "database" },
+  { name: "Git",                       level: 92, category: "tools" },
+  { name: "OpenAI API",                level: 82, category: "ai" },
+  { name: "Next.js",                   level: 88, category: "frontend" },
+  { name: "Django",                    level: 80, category: "backend" },
+  { name: "MongoDB",                   level: 80, category: "database" },
+  { name: "VS Code",                   level: 95, category: "tools" },
+  { name: "Claude API",                level: 80, category: "ai" },
+  { name: "JavaScript (ES6+)",         level: 95, category: "frontend" },
+  { name: "Django REST Framework",     level: 82, category: "backend" },
+  { name: "MySQL",                     level: 78, category: "database" },
+  { name: "GitHub",                    level: 90, category: "tools" },
+  { name: "AI Chatbot Integration",    level: 84, category: "ai" },
+  { name: "HTML5",                     level: 95, category: "frontend" },
+  { name: "REST API Development",      level: 88, category: "backend" },
+  { name: "Supabase",                  level: 80, category: "database" },
+  { name: "Postman",                   level: 86, category: "tools" },
+  { name: "Prompt Engineering",        level: 85, category: "ai" },
+  { name: "CSS3",                      level: 92, category: "frontend" },
+  { name: "Authentication & Auth",     level: 85, category: "backend" },
+  { name: "Firebase Firestore",        level: 82, category: "database" },
+  { name: "Figma",                     level: 75, category: "tools" },
+  { name: "Tailwind CSS",              level: 90, category: "frontend" },
+  { name: "JWT Authentication",        level: 84, category: "backend" },
+  { name: "Vercel",                    level: 88, category: "tools" },
+  { name: "Redux Toolkit",             level: 82, category: "frontend" },
+  { name: "JavaScript",                level: 90, category: "backend" },
+  { name: "Netlify",                   level: 84, category: "tools" },
+  { name: "Zustand",                   level: 80, category: "frontend" },
+  { name: "SCSS / Sass",               level: 85, category: "frontend" },
+  { name: "Framer Motion",             level: 82, category: "frontend" },
+  { name: "GSAP",                      level: 80, category: "frontend" },
+  { name: "Three.js",                  level: 72, category: "frontend" }
+];
 
-const CATEGORIES = ["all", "frontend", "backend", "database", "tools", "emerging"];
+const CATEGORIES = ["ALL", "FRONTEND", "BACKEND", "DATABASE", "TOOLS", "AI"];
 
 export default function SkillsSection() {
-  const { skills } = CONFIG;
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [isMobile, setIsMobile] = useState(false);
-  const mouse = useMouseParallax(0.8);
+  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    setIsLoaded(true);
   }, []);
 
-  const filteredSkills = activeCategory === "all"
-    ? skills
-    : skills.filter((s) => s.category === activeCategory);
+  // Filter skills and calculate matching count instantly
+  const filteredSkills = activeCategory === "ALL"
+    ? SKILLS_DATA
+    : SKILLS_DATA.filter((s) => s.category.toUpperCase() === activeCategory);
+
+  const activeCount = filteredSkills.length;
 
   return (
     <section
       id="skills"
-      className="relative w-full min-h-screen bg-bg border-t border-white/5 py-24 md:py-32 px-6 md:px-12 overflow-hidden flex flex-col"
+      className="relative w-full bg-bg border-t border-white/5 py-24 md:py-28 px-6 md:px-12 overflow-hidden flex flex-col font-mono text-white"
     >
-      {/* Background glow */}
+      {/* Dynamic Keyframe style blocks */}
+      <style>{`
+        @keyframes blink {
+          from, to { background-color: transparent; }
+          50% { background-color: currentColor; }
+        }
+        .blinking-cursor {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          margin-left: 6px;
+          animation: blink 1s step-end infinite;
+          background-color: currentColor;
+          vertical-align: middle;
+        }
+        .skill-card-hover:hover {
+          border-color: rgba(255, 255, 255, 0.15) !important;
+          background-color: rgba(255, 255, 255, 0.02) !important;
+        }
+        .skill-card-hover:hover .progress-bar {
+          filter: brightness(1.2) !important;
+        }
+      `}</style>
+
+      {/* Background accent */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(67,56,202,0.07) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 60% 40% at 20% 60%, rgba(79,70,229,0.05) 0%, transparent 70%)",
         }}
       />
 
-      {/* Header */}
-      <div className="max-w-7xl mx-auto w-full">
-        <motion.span
-          className="font-mono text-[9px] tracking-[0.35em] uppercase text-muted"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          04 — Skills
-        </motion.span>
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mt-3 mb-12">
-          <motion.h2
-            className="font-display text-5xl md:text-6xl lg:text-7xl text-highlight leading-none tracking-tight"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Tech <br />
-            <span className="text-accent/40">Galaxy</span>
-          </motion.h2>
+      {/* Main Terminal Wrapper */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col justify-between flex-1">
+        
+        {/* Top Header Row */}
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <div className="font-mono text-[9px] tracking-[0.35em] uppercase text-muted block mb-2">
+              04 — SKILLS
+            </div>
+            <h2 className="font-display text-5xl md:text-6xl lg:text-7xl text-highlight leading-none tracking-tight m-0">
+              Stack <br />
+              <span className="text-accent/40">/ Index</span>
+            </h2>
+          </div>
+          
+          {/* Live Skill Count Counter */}
+          <div className="flex flex-col items-end">
+            <span className="font-mono text-[9px] tracking-[0.2em] text-muted uppercase mb-1">
+              LIVE_COUNT
+            </span>
+            <div className="font-mono text-5xl md:text-6xl font-bold text-highlight leading-none">
+              {activeCount < 10 ? `0${activeCount}` : activeCount}
+            </div>
+          </div>
+        </div>
 
-          {/* Category filters */}
-          <motion.div
-            className="flex flex-wrap gap-2"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            {CATEGORIES.map((cat) => (
-              <FilterBtn
+        {/* Category filters tab list */}
+        <div className="flex flex-wrap gap-2 mb-10">
+          {CATEGORIES.map((cat) => {
+            const active = activeCategory === cat;
+            const color = CAT_COLORS[cat.toLowerCase()] || "#ffffff";
+            return (
+              <button
                 key={cat}
-                label={cat}
-                active={activeCategory === cat}
                 onClick={() => setActiveCategory(cat)}
-              />
-            ))}
-          </motion.div>
+                className={`font-mono text-[9px] tracking-[0.25em] uppercase px-5 py-2.5 transition-all duration-300 border ${
+                  active
+                    ? "text-black bg-white"
+                    : "border-white/5 text-muted hover:border-white/20 hover:text-white"
+                }`}
+                style={{
+                  borderRadius: 0,
+                  borderColor: active ? color : undefined,
+                  boxShadow: active ? `0 0 15px ${color}33` : "none",
+                  backgroundColor: active ? color : "rgba(255,255,255,0.01)",
+                  color: active ? "#000000" : undefined,
+                  cursor: "pointer"
+                }}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Hint text */}
-        <motion.p
-          className="font-mono text-[9px] tracking-[0.25em] uppercase text-muted/40 mb-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
+        {/* Brutalist Skills Grid Layout */}
+        <div
+          className="grid gap-0 border border-white/5 bg-bg"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))"
+          }}
         >
-          {isMobile ? "Your tech stack" : "Move mouse to rotate · Hover node for details"}
-        </motion.p>
+          {SKILLS_DATA.map((skill) => {
+            const isMatch = activeCategory === "ALL" || skill.category.toUpperCase() === activeCategory;
+            const color = CAT_COLORS[skill.category] || "#ffffff";
+            const badgeText = CAT_BADGES[skill.category] || "FE";
+            
+            // 10-dot system calculations
+            const filledDots = Math.round(skill.level / 10);
+
+            return (
+              <div
+                key={skill.name}
+                className="skill-card-hover flex flex-col justify-between h-[135px] p-[18px] border border-white/5 bg-transparent transition-all duration-300"
+                style={{
+                  display: isMatch ? "flex" : "none",
+                  margin: "-0.5px", // Share grid borders cleanly
+                  boxSizing: "border-box"
+                }}
+              >
+                {/* 1. Skill Name & Category badge row */}
+                <div className="flex justify-between items-center">
+                  <span className="font-mono text-sm font-bold text-highlight tracking-wide">
+                    {skill.name}
+                  </span>
+                  
+                  {/* Category badge */}
+                  <span
+                    className="font-mono text-[8px] font-bold tracking-wider py-[2px] px-[6px]"
+                    style={{
+                      border: `1px solid ${color}33`,
+                      backgroundColor: `${color}11`,
+                      color: color,
+                      borderRadius: "1px",
+                      textTransform: "uppercase"
+                    }}
+                  >
+                    {badgeText}
+                  </span>
+                </div>
+
+                {/* 2. 2px thin animated progress bar */}
+                <div>
+                  <div className="h-[2px] w-full bg-white/5">
+                    <div
+                      className="progress-bar h-full"
+                      style={{
+                        width: isLoaded && isMatch ? `${skill.level}%` : "0%",
+                        backgroundColor: color,
+                        boxShadow: `0 0 6px ${color}88`,
+                        transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Bottom row: Proficiency percentage & Dot-matrix ratings */}
+                <div className="flex justify-between items-center">
+                  <span className="font-mono text-[9px] font-bold text-muted tracking-wide">
+                    {skill.level}% <span className="text-white/20 text-[8px]">PRO</span>
+                  </span>
+
+                  {/* 10-dot indicator */}
+                  <div className="flex gap-[4.5px]">
+                    {Array.from({ length: 10 }).map((_, idx) => {
+                      const isFilled = idx < filledDots;
+                      return (
+                        <div
+                          key={idx}
+                          className="w-1 h-1 rounded-full transition-all duration-300"
+                          style={{
+                            border: isFilled ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
+                            backgroundColor: isFilled ? color : "transparent",
+                            boxShadow: isFilled ? `0 0 4px ${color}` : "none"
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Brutalist Footer Row */}
+        <div className="flex justify-start items-center mt-8 font-mono text-[9px] text-muted tracking-widest uppercase">
+          <span>always learning</span>
+        </div>
+
       </div>
-
-      {/* 3D Canvas or mobile grid */}
-      {!isMobile ? (
-        <motion.div
-          className="flex-1 w-full min-h-[60vh]"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
-          <Canvas
-            camera={{ position: [0, 0, 7], fov: 60 }}
-            dpr={[1, 2]}
-            gl={{ antialias: true, alpha: true }}
-          >
-            <Suspense fallback={null}>
-              <TechGalaxy
-                skills={filteredSkills}
-                mouseX={mouse.x}
-                mouseY={mouse.y}
-              />
-            </Suspense>
-          </Canvas>
-        </motion.div>
-      ) : (
-        <div className="max-w-7xl mx-auto w-full">
-          <MobileSkillGrid skills={filteredSkills} />
-        </div>
-      )}
     </section>
   );
 }
