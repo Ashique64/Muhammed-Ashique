@@ -98,7 +98,8 @@ export const CONFIG = {
       { name: "GitHub", url: "https://github.com/Ashique64", username: "@Ashique64", icon: "github" },
       { name: "LinkedIn", url: "https://www.linkedin.com/in/muhammed-ashique-k-p-9a03b0267/", username: "Muhammed Ashique K P", icon: "linkedin" },
       { name: "Email", url: "mailto:ashique200899@gmail.com", username: "ashique200899@gmail.com", icon: "email" },
-      { name: "WhatsApp", url: "https://wa.me/91860128064", username: "+91 860128064", icon: "whatsapp" }
+      { name: "WhatsApp", url: "https://wa.me/918606128064", username: "+91 8606128064", icon: "whatsapp" },
+      { name: "Phone", url: "tel:+918606128064", username: "+91 8606128064", icon: "phone" }
     ]
   },
 

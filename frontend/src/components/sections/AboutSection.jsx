@@ -92,7 +92,8 @@ function TechBadge({ name, color, delay, iconName }) {
 }
 
 export default function AboutSection() {
-  const { bio, socials } = CONFIG.about;
+  const { bio } = CONFIG.about;
+  const socials = CONFIG.about.socials.filter(s => s.name !== "Phone");
   const { stats } = CONFIG.profile;
   const topSkills = CONFIG.skills.slice(0, 12);
   const sectionRef = useRef(null);

@@ -122,7 +122,7 @@ export default function DeveloperCore({ mouseX = 0, mouseY = 0, isMobile = false
   });
 
   return (
-    <group ref={groupRef} scale={isMobile ? 0.9 : 1.4}>
+    <group ref={groupRef} scale={isMobile ? 0.6 : 0.95}>
       <TechWireframe />
       <FloatingCubes isMobile={isMobile} />
       
