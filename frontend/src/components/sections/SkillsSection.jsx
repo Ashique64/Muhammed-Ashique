@@ -134,9 +134,9 @@ function SkillCard({ skill, activeCategory, isLoaded }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Tilt transform mappings
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]);
+  // Tilt transform mappings (perfectly aligned with Projects Section cards)
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-8, 8]);
 
   const handleMouseMove = (e) => {
     const rect = cardRef.current?.getBoundingClientRect();
@@ -161,103 +161,111 @@ function SkillCard({ skill, activeCategory, isLoaded }) {
   const filledDots = Math.round(skill.level / 10);
 
   return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="skill-card-hover relative flex flex-col justify-between h-[135px] p-[18px] border border-white/5 bg-transparent overflow-hidden group cursor-pointer transition-all duration-300"
+    <div
       style={{
-        display: isMatch ? "flex" : "none",
+        display: isMatch ? "block" : "none",
+        perspective: 1000,
         margin: "-0.5px", // Share grid borders cleanly
         boxSizing: "border-box",
-        rotateX: isMatch ? rotateX : 0,
-        rotateY: isMatch ? rotateY : 0,
-        transformStyle: "preserve-3d",
       }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
-      {/* Dynamic Cursor Spotlight Overlay */}
       <motion.div
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="skill-card-hover relative flex flex-col justify-between h-[135px] p-[18px] border border-white/5 bg-transparent overflow-hidden group cursor-pointer transition-colors duration-300"
         style={{
-          background: useTransform(
-            [lightX, lightY],
-            ([x, y]) => `radial-gradient(150px circle at ${x} ${y}, ${color}1a, transparent 70%)`
-          ),
+          width: "100%",
+          height: "100%",
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
         }}
-      />
+        whileHover={{ scale: 1.02 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      >
+        {/* Dynamic Cursor Spotlight Overlay (Soft expanded gradient matching projects card) */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
+          style={{
+            background: useTransform(
+              [lightX, lightY],
+              ([x, y]) => `radial-gradient(250px circle at ${x} ${y}, ${color}1a, transparent 70%)`
+            ),
+          }}
+        />
 
-      {/* Card border glow on hover */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
-        style={{ boxShadow: `inset 0 0 0 1px ${color}33` }}
-      />
+        {/* Card border glow on hover */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+          style={{ boxShadow: `inset 0 0 0 1px ${color}33` }}
+        />
 
-      {/* Content wrapper layered on top of spotlight */}
-      <div className="relative z-10 flex flex-col justify-between h-full w-full pointer-events-none">
-        {/* 1. Skill Name & Category badge row */}
-        <div className="flex justify-between items-center">
-          <span className="font-mono text-sm font-bold text-highlight tracking-wide">
-            {skill.name}
-          </span>
-          
-          {/* Category badge */}
-          <span
-            className="font-mono text-[8px] font-bold tracking-wider py-[2px] px-[6px]"
-            style={{
-              border: `1px solid ${color}33`,
-              backgroundColor: `${color}11`,
-              color: color,
-              borderRadius: "1px",
-              textTransform: "uppercase"
-            }}
-          >
-            {badgeText}
-          </span>
-        </div>
-
-        {/* 2. 2px thin animated progress bar */}
-        <div>
-          <div className="h-[2px] w-full bg-white/5">
-            <div
-              className="progress-bar h-full"
+        {/* Content wrapper layered on top of spotlight */}
+        <div className="relative z-10 flex flex-col justify-between h-full w-full pointer-events-none">
+          {/* 1. Skill Name & Category badge row */}
+          <div className="flex justify-between items-center">
+            <span className="font-mono text-sm font-bold text-highlight tracking-wide">
+              {skill.name}
+            </span>
+            
+            {/* Category badge */}
+            <span
+              className="font-mono text-[8px] font-bold tracking-wider py-[2px] px-[6px]"
               style={{
-                width: isLoaded && isMatch ? `${skill.level}%` : "0%",
-                backgroundColor: color,
-                boxShadow: `0 0 6px ${color}88`,
-                transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
+                border: `1px solid ${color}33`,
+                backgroundColor: `${color}11`,
+                color: color,
+                borderRadius: "1px",
+                textTransform: "uppercase"
               }}
-            />
+            >
+              {badgeText}
+            </span>
+          </div>
+
+          {/* 2. 2px thin animated progress bar */}
+          <div>
+            <div className="h-[2px] w-full bg-white/5">
+              <div
+                className="progress-bar h-full"
+                style={{
+                  width: isLoaded && isMatch ? `${skill.level}%` : "0%",
+                  backgroundColor: color,
+                  boxShadow: `0 0 6px ${color}88`,
+                  transition: "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 3. Bottom row: Proficiency percentage & Dot-matrix ratings */}
+          <div className="flex justify-between items-center">
+            <span className="font-mono text-[9px] font-bold text-muted tracking-wide">
+              {skill.level}% <span className="text-white/20 text-[8px]">PRO</span>
+            </span>
+
+            {/* 10-dot indicator */}
+            <div className="flex gap-[4.5px]">
+              {Array.from({ length: 10 }).map((_, idx) => {
+                const isFilled = idx < filledDots;
+                return (
+                  <div
+                    key={idx}
+                    className="w-1 h-1 rounded-full transition-all duration-300"
+                    style={{
+                      border: isFilled ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
+                      backgroundColor: isFilled ? color : "transparent",
+                      boxShadow: isFilled ? `0 0 4px ${color}` : "none"
+                    }}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
-
-        {/* 3. Bottom row: Proficiency percentage & Dot-matrix ratings */}
-        <div className="flex justify-between items-center">
-          <span className="font-mono text-[9px] font-bold text-muted tracking-wide">
-            {skill.level}% <span className="text-white/20 text-[8px]">PRO</span>
-          </span>
-
-          {/* 10-dot indicator */}
-          <div className="flex gap-[4.5px]">
-            {Array.from({ length: 10 }).map((_, idx) => {
-              const isFilled = idx < filledDots;
-              return (
-                <div
-                  key={idx}
-                  className="w-1 h-1 rounded-full transition-all duration-300"
-                  style={{
-                    border: isFilled ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
-                    backgroundColor: isFilled ? color : "transparent",
-                    boxShadow: isFilled ? `0 0 4px ${color}` : "none"
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -376,7 +384,6 @@ export default function SkillsSection() {
           className="grid gap-0 border border-white/5 bg-bg"
           style={{
             gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
-            perspective: 800,
           }}
         >
           {SKILLS_DATA.map((skill) => (
