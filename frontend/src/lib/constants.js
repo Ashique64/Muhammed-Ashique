@@ -130,7 +130,7 @@ export const CONFIG = {
   ],
 
   about: {
-    photo: "/avatar.png",
+    photo: "/avatar.jpg",
     bio: [
       "I am a Full Stack Developer and React Specialist obsessed with engineering high-performance, pixel-perfect digital experiences that bridge the gap between design and technology.",
       "My development philosophy is rooted in architectural minimalism. I believe modern web applications should be aggressively optimized, visually stunning, and run with flawless hardware acceleration.",

@@ -45,7 +45,7 @@ export default function AboutPage() {
         />
 
         {/* Mounted Client-side Content Dashboard */}
-        <AboutPageClient bio={bio} socials={socials} />
+        <AboutPageClient bio={bio} socials={socials} photo={CONFIG.about.photo} />
 
         {/* Cinematic Standard Horizontal Footer */}
         <footer className="w-full max-w-4xl border-t border-white/5 py-8 mt-20 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">

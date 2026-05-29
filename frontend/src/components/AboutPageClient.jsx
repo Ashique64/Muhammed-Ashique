@@ -127,10 +127,10 @@ function SocialConnectCard({ link, delay }) {
           </div>
 
           {/* Bottom row: brand name and arrow */}
-          <div className="font-sans text-xs md:text-sm text-highlight font-semibold mt-8 group-hover:translate-x-1.5 transition-transform duration-300 flex items-center justify-between w-full">
-            <span>{link.name}</span>
-            <span className="text-[10px] opacity-40 group-hover:opacity-100 transition-opacity font-normal pr-1">
-              &nearr;
+          <div className="font-sans text-xs md:text-sm text-highlight font-semibold mt-8 flex items-center justify-between w-full group-hover:text-highlight transition-colors duration-300">
+            <span className="group-hover:translate-x-1 transition-transform duration-300">{link.name}</span>
+            <span className="text-[11px] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 font-normal pr-1">
+              ↗
             </span>
           </div>
         </div>
@@ -139,7 +139,7 @@ function SocialConnectCard({ link, delay }) {
   );
 }
 
-export default function AboutPageClient({ bio, socials }) {
+export default function AboutPageClient({ bio, socials, photo }) {
   return (
     <div className="max-w-4xl w-full flex flex-col relative z-10">
       {/* Headline block */}
@@ -154,55 +154,22 @@ export default function AboutPageClient({ bio, socials }) {
 
       {/* 2-Column Content Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
-        {/* Left Column: SVG Graphic */}
+        {/* Left Column: Profile Photo */}
         <div className="col-span-1 md:col-span-5 flex justify-center w-full">
-          <div className="w-full aspect-[4/5] max-w-sm rounded-2xl border border-white/5 bg-surface/20 relative overflow-hidden flex flex-col items-center justify-center group shadow-2xl">
-            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-white/[0.03] rounded-full blur-[40px] group-hover:scale-110 transition-transform duration-700" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.01] rounded-full blur-[30px] group-hover:scale-110 transition-transform duration-700" />
+          <div className="w-full aspect-[4/5] max-w-sm rounded-2xl border border-white/5 bg-surface/20 relative overflow-hidden group shadow-2xl">
+            {/* Top-right & bottom-left background glows */}
+            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/10 rounded-full blur-[40px] group-hover:scale-110 transition-transform duration-700" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/5 rounded-full blur-[30px] group-hover:scale-110 transition-transform duration-700" />
 
-            <svg
-              viewBox="0 0 200 200"
-              className="w-40 h-40 opacity-60 group-hover:opacity-90 transition-all duration-700 relative z-10 scale-95 group-hover:scale-100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="100"
-                cy="100"
-                r="80"
-                stroke="rgba(232,232,232,0.06)"
-                strokeWidth="1"
-              />
-              <circle
-                cx="100"
-                cy="100"
-                r="50"
-                stroke="rgba(232,232,232,0.1)"
-                strokeWidth="1"
-                strokeDasharray="3 3"
-              />
-              <path
-                d="M50 100 L150 100"
-                stroke="rgba(232,232,232,0.12)"
-                strokeWidth="0.75"
-              />
-              <path
-                d="M100 50 L100 150"
-                stroke="rgba(232,232,232,0.12)"
-                strokeWidth="0.75"
-              />
-              <circle cx="100" cy="100" r="6" fill="rgba(255,255,255,0.95)" />
-              <circle cx="50" cy="100" r="2.5" fill="rgba(232,232,232,0.4)" />
-              <circle cx="150" cy="100" r="2.5" fill="rgba(232,232,232,0.4)" />
-              <circle cx="100" cy="50" r="2.5" fill="rgba(232,232,232,0.4)" />
-              <circle cx="100" cy="150" r="2.5" fill="rgba(232,232,232,0.4)" />
-            </svg>
+            {/* Profile Image with subtle zoom and black/white-to-color transition */}
+            <img
+              src={photo || "/avatar.jpg"}
+              alt="Muhammed Ashique"
+              className="w-full h-full object-cover filter grayscale-[20%] contrast-[1.05] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out relative z-10"
+            />
 
-            <div className="absolute bottom-6 left-6 right-6 bg-surface/60 backdrop-blur-md border border-white/5 px-4 py-3 rounded-lg text-center shadow-lg select-none">
-              <span className="font-mono text-[9px] tracking-widest text-highlight uppercase font-semibold">
-                SYSTEM ACTIVE
-              </span>
-            </div>
+            {/* Premium glass border glow */}
+            <div className="pointer-events-none absolute inset-0 z-20 rounded-2xl border border-white/10 group-hover:border-indigo-500/30 transition-colors duration-500" />
           </div>
         </div>
 
