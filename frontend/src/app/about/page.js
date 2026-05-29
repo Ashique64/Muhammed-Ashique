@@ -1,4 +1,6 @@
+import AboutPageClient from "@/components/AboutPageClient";
 import { CONFIG } from "@/lib/constants";
+import PageProgress from "@/components/ui/PageProgress";
 
 export const metadata = {
   title: `About | ${CONFIG.profile.name}`,
@@ -6,90 +8,61 @@ export const metadata = {
 };
 
 export default function AboutPage() {
-  const bio    = CONFIG.about.bio;
+  const bio = CONFIG.about.bio;
   const socials = CONFIG.about.socials;
 
   return (
-    <main className="w-full min-h-screen bg-bg px-6 py-32 md:px-12 md:py-40 flex flex-col items-center">
-      <div className="max-w-4xl w-full flex flex-col">
+    <>
+      {/* Global scroll progress bar */}
+      <PageProgress />
 
-        {/* Headline block */}
-        <div className="mb-16 md:mb-24 flex flex-col items-start border-b border-white/5 pb-12 select-none">
-          <span className="font-mono text-[10px] tracking-widest text-muted uppercase">
-            The Mind &amp; Philosophy
+      {/* Main Page Wrapper */}
+      <main
+        id="top"
+        className="w-full min-h-screen bg-bg px-6 py-32 md:px-12 md:py-40 flex flex-col items-center relative overflow-hidden"
+      >
+        {/* Background Accent Gradient */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(99,102,241,0.05) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Background CSS Grid Lines */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            maskImage:
+              "radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 100%)",
+          }}
+        />
+
+        {/* Mounted Client-side Content Dashboard */}
+        <AboutPageClient bio={bio} socials={socials} />
+
+        {/* Cinematic Standard Horizontal Footer */}
+        <footer className="w-full max-w-4xl border-t border-white/5 py-8 mt-20 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+          <span className="font-mono text-[9px] tracking-[0.3em] uppercase text-muted">
+            © 2026 {CONFIG.profile.name} — Built with Next.js &amp; Three.js
           </span>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-highlight leading-none tracking-tight mt-4">
-            About Me
-          </h1>
-        </div>
-
-        {/* 2-Column Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
-
-          {/* Left Column: SVG Graphic */}
-          <div className="col-span-1 md:col-span-5 flex justify-center w-full">
-            <div className="w-full aspect-[4/5] max-w-sm rounded-2xl border border-white/5 bg-surface/20 relative overflow-hidden flex flex-col items-center justify-center group shadow-2xl">
-              <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-white/[0.03] rounded-full blur-[40px] group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/[0.01] rounded-full blur-[30px] group-hover:scale-110 transition-transform duration-700" />
-
-              <svg viewBox="0 0 200 200" className="w-40 h-40 opacity-60 group-hover:opacity-90 transition-all duration-700 relative z-10 scale-95 group-hover:scale-100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="80" stroke="rgba(232,232,232,0.06)" strokeWidth="1" />
-                <circle cx="100" cy="100" r="50" stroke="rgba(232,232,232,0.1)" strokeWidth="1" strokeDasharray="3 3" />
-                <path d="M50 100 L150 100" stroke="rgba(232,232,232,0.12)" strokeWidth="0.75" />
-                <path d="M100 50 L100 150" stroke="rgba(232,232,232,0.12)" strokeWidth="0.75" />
-                <circle cx="100" cy="100" r="6" fill="rgba(255,255,255,0.95)" />
-                <circle cx="50"  cy="100" r="2.5" fill="rgba(232,232,232,0.4)" />
-                <circle cx="150" cy="100" r="2.5" fill="rgba(232,232,232,0.4)" />
-                <circle cx="100" cy="50"  r="2.5" fill="rgba(232,232,232,0.4)" />
-                <circle cx="100" cy="150" r="2.5" fill="rgba(232,232,232,0.4)" />
-              </svg>
-
-              <div className="absolute bottom-6 left-6 right-6 bg-surface/60 backdrop-blur-md border border-white/5 px-4 py-3 rounded-lg text-center shadow-lg select-none">
-                <span className="font-mono text-[9px] tracking-widest text-highlight uppercase font-semibold">
-                  SYSTEM ACTIVE
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Bio */}
-          <div className="col-span-1 md:col-span-7 flex flex-col justify-start gap-8">
-            {bio.map((paragraph, idx) => (
-              <p key={idx} className="font-sans text-xs md:text-sm leading-relaxed text-accent/80 font-light hover:text-highlight transition-colors duration-300">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        {/* Let's Connect */}
-        <div className="mt-24 md:mt-36 border-t border-white/5 pt-16 flex flex-col items-start w-full">
-          <span className="font-mono text-[10px] tracking-widest text-muted uppercase">
-            Connections &amp; Channels
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl text-highlight mt-4 mb-10 select-none">
-            Let's connect
-          </h2>
-
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {socials.map((link) => (
-              <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer"
-                suppressHydrationWarning
-                className="flex flex-col p-5 border border-white/5 hover:border-white/12 bg-surface/15 hover:bg-surface/35 rounded-xl transition-all duration-300 group shadow-md"
-              >
-                <span className="font-mono text-[9px] tracking-widest text-muted uppercase group-hover:text-highlight transition-colors">
-                  {link.name}
-                </span>
-                <span className="font-sans text-xs md:text-sm text-highlight font-semibold mt-2 group-hover:translate-x-1.5 transition-transform duration-300 inline-flex items-center gap-1.5">
-                  {link.username}
-                  <span className="text-[10px] opacity-60 group-hover:opacity-100 transition-opacity font-normal">&nearr;</span>
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-      </div>
-    </main>
+          <a
+            href="#top"
+            className="font-mono text-[9px] tracking-[0.3em] uppercase text-muted hover:text-highlight transition-colors duration-300 flex items-center gap-2 group"
+          >
+            Back to top
+            <span className="group-hover:-translate-y-1 transition-transform duration-200">
+              ↑
+            </span>
+          </a>
+        </footer>
+      </main>
+    </>
   );
 }
