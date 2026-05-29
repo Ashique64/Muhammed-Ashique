@@ -120,7 +120,7 @@ function SocialConnectCard({ link, delay }) {
               style={{
                 "--brand-color": color,
               }}
-              className="text-muted/40 group-hover:text-[var(--brand-color)] group-hover:drop-shadow-[0_0_8px_var(--brand-color)] group-hover:scale-110 transition-all duration-300"
+              className="text-muted/40 group-hover:text-(--brand-color) group-hover:drop-shadow-[0_0_8px_var(--brand-color)] group-hover:scale-110 transition-all duration-300"
             />
           )}
 
@@ -154,16 +154,16 @@ export default function AboutPageClient({ bio, socials, photo }) {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
         {/* Left Column: Profile Photo */}
         <div className="col-span-1 md:col-span-5 flex justify-center w-full">
-          <div className="w-full aspect-[4/5] max-w-sm rounded-2xl border border-white/5 bg-surface/20 relative overflow-hidden group shadow-2xl">
+          <div className="w-full aspect-4/5 max-w-sm rounded-2xl border border-white/5 bg-surface/20 relative overflow-hidden group shadow-2xl">
             {/* Top-right & bottom-left background glows */}
-            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/10 rounded-full blur-[40px] group-hover:scale-110 transition-transform duration-700" />
+            <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/5 rounded-full blur-[30px] group-hover:scale-110 transition-transform duration-700" />
 
             {/* Profile Image with subtle zoom and black/white-to-color transition */}
             <img
               src={photo || "/avatar.jpg"}
               alt="Muhammed Ashique"
-              className="w-full h-full object-cover filter grayscale-[20%] contrast-[1.05] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out relative z-10"
+              className="w-full h-full object-cover filter grayscale-20 contrast-[1.05] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out relative z-10"
             />
 
             {/* Premium glass border glow */}
