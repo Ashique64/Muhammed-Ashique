@@ -112,24 +112,22 @@ function SocialConnectCard({ link, delay }) {
           style={{ boxShadow: `inset 0 0 0 1px ${color}22` }}
         />
 
-        <div className="relative z-10 flex flex-col justify-between h-full w-full pointer-events-none">
-          {/* Top row: brand icon */}
-          <div className="flex items-center w-full">
-            {IconComponent && (
-              <IconComponent
-                size={18}
-                style={{
-                  "--brand-color": color,
-                }}
-                className="text-muted/40 group-hover:text-[var(--brand-color)] group-hover:drop-shadow-[0_0_6px_var(--brand-color)] group-hover:scale-110 transition-all duration-300"
-              />
-            )}
-          </div>
+        <div className="relative z-10 flex flex-col items-center justify-center text-center h-full w-full pointer-events-none gap-3 py-2">
+          {/* Centered brand icon */}
+          {IconComponent && (
+            <IconComponent
+              size={24}
+              style={{
+                "--brand-color": color,
+              }}
+              className="text-muted/40 group-hover:text-[var(--brand-color)] group-hover:drop-shadow-[0_0_8px_var(--brand-color)] group-hover:scale-110 transition-all duration-300"
+            />
+          )}
 
-          {/* Bottom row: brand name and arrow */}
-          <div className="font-sans text-xs md:text-sm text-highlight font-semibold mt-8 flex items-center justify-between w-full group-hover:text-highlight transition-colors duration-300">
-            <span className="group-hover:translate-x-1 transition-transform duration-300">{link.name}</span>
-            <span className="text-[11px] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 font-normal pr-1">
+          {/* Centered brand name and arrow */}
+          <div className="font-sans text-xs md:text-sm text-highlight font-semibold flex items-center justify-center gap-1.5 group-hover:text-highlight transition-colors duration-300 w-full">
+            <span className="group-hover:translate-x-0.5 transition-transform duration-300">{link.name}</span>
+            <span className="text-[11px] opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 font-normal">
               ↗
             </span>
           </div>
