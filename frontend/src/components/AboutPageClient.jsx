@@ -113,14 +113,11 @@ function SocialConnectCard({ link, delay }) {
         />
 
         <div className="relative z-10 flex flex-col justify-between h-full w-full pointer-events-none">
-          {/* Top row: Name & brand icon */}
-          <div className="flex justify-between items-center w-full">
-            <span className="font-mono text-[9px] tracking-widest text-muted uppercase group-hover:text-highlight transition-colors">
-              {link.name}
-            </span>
+          {/* Top row: brand icon */}
+          <div className="flex items-center w-full">
             {IconComponent && (
               <IconComponent
-                size={16}
+                size={18}
                 style={{
                   "--brand-color": color,
                 }}
@@ -129,9 +126,9 @@ function SocialConnectCard({ link, delay }) {
             )}
           </div>
 
-          {/* Bottom row: username and arrow */}
-          <div className="font-sans text-xs md:text-sm text-highlight font-semibold mt-6 group-hover:translate-x-1.5 transition-transform duration-300 flex items-center justify-between w-full">
-            <span className="truncate pr-2">{link.username}</span>
+          {/* Bottom row: brand name and arrow */}
+          <div className="font-sans text-xs md:text-sm text-highlight font-semibold mt-8 group-hover:translate-x-1.5 transition-transform duration-300 flex items-center justify-between w-full">
+            <span>{link.name}</span>
             <span className="text-[10px] opacity-40 group-hover:opacity-100 transition-opacity font-normal pr-1">
               &nearr;
             </span>
