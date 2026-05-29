@@ -104,7 +104,7 @@ export default function WorkCard({ workData, index }) {
             background: useTransform(
               [lightX, lightY],
               ([x, y]) =>
-                `radial-gradient(280px circle at ${x} ${y}, rgba(167, 139, 250, 0.08), transparent 70%)`
+                `radial-gradient(300px circle at ${x} ${y}, rgba(167, 139, 250, 0.08), transparent 70%)`
             ),
           }}
         />
