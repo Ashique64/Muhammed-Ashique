@@ -1,7 +1,6 @@
 import WorkCard from "@/components/work/WorkCard";
 import { CONFIG } from "@/lib/constants";
 import PageProgress from "@/components/ui/PageProgress";
-import { StarfieldCanvas } from "@/components/sections/SkillsSection";
 
 export const metadata = {
   title: `Work Experience | ${CONFIG.profile.name}`,
@@ -42,8 +41,7 @@ export default function WorkPage() {
           }}
         />
 
-        {/* Cosmic Parallax Starfield Background */}
-        <StarfieldCanvas />
+
 
         <div className="max-w-4xl w-full flex flex-col relative z-10">
           {/* Header Block */}
