@@ -12,7 +12,7 @@ export const CONFIG = {
       sublabel: "Optimized Performance"
     },
     stats: [
-      { value: "2+", label: "Years Building" },
+      { value: "3+", label: "Years Building" },
       { value: "20+", label: "Projects Shipped" },
       { value: "100%", label: "Client Satisfaction" },
       { value: "∞", label: "Curiosity" },
@@ -61,29 +61,71 @@ export const CONFIG = {
   work: [
     {
       id: "w1",
-      company: "Full Stack Development & Freelancing",
-      role: "Full Stack Developer",
-      period: "2023 — Present",
+      company: "Cozech",
+      role: "Freelance Full-Stack Developer",
+      period: "Jan 2026 — Present",
       bullets: [
-        "Architected responsive Single Page Applications (SPAs) using React and Vite, achieving 40% improvements in page load speeds.",
-        "Integrated secure REST API endpoints with Node.js and Express, guaranteeing high-performance data processing pipelines.",
-        "Implemented pixel-perfect styling using Tailwind CSS, strictly following semantic layout principles and responsive designs.",
-        "Leveraged Git and GitHub to maintain structured version control branches and review team pull requests."
+        "Engineered high-performance web applications using Next.js (App Router, Server Components) for optimal SEO and client-side performance.",
+        "Designed and structured robust backend services and real-time database schemas utilizing Supabase and Firebase Firestore.",
+        "Developed efficient and lightweight global state management architectures with Zustand to manage client-side transitions and operations.",
+        "Built modern, visually optimized responsive interfaces and integrated clean, serverless authentication and hosting services."
       ],
-      skills: ["React.js", "Vite", "JavaScript (ES6+)", "Tailwind CSS", "Node.js", "Express", "REST APIs", "Git", "GitHub"]
+      skills: ["Next.js", "Supabase", "Zustand", "Firebase", "React.js", "Tailwind CSS", "JavaScript", "Git"]
     },
     {
       id: "w2",
-      company: "Interactive Web Projects",
-      role: "Frontend Developer",
-      period: "2022 — 2023",
+      company: "Digital Roomz (Kochi)",
+      role: "Full-Stack Developer",
+      period: "May 2025 — Jan 2026",
       bullets: [
-        "Designed modular UI components utilizing modern CSS flexbox and grid styling properties.",
-        "Refactored legacy vanilla CSS markup into optimized, responsive HTML structures.",
-        "Developed custom interactive cards and dynamic content layouts using React hooks.",
-        "Managed GitHub repository releases, creating descriptive documentation templates and blog layouts."
+        "Developed and maintained web applications using Python, Django, and React.js in a remote work environment.",
+        "Built responsive user interfaces with HTML, CSS, and SCSS, ensuring cross-browser compatibility.",
+        "Created and consumed RESTful APIs and managed efficient data storage and queries using PostgreSQL.",
+        "Deployed and maintained web applications through cPanel, handling file management, database setup, and domain configurations.",
+        "Integrated UI components and improved design consistency to match brand requirements across different screen sizes."
       ],
-      skills: ["HTML5", "CSS3", "JavaScript", "React", "Git", "GitHub", "Responsive Design"]
+      skills: ["Python", "Django", "React.js", "PostgreSQL", "HTML5", "CSS3", "SCSS", "REST APIs", "cPanel"]
+    },
+    {
+      id: "w3",
+      company: "Tortillon Technologies",
+      role: "Full-Stack Developer (Remote)",
+      period: "Oct 2024 — Apr 2025",
+      bullets: [
+        "Developed and maintained web applications using Python, Django, and React.js in a remote work environment.",
+        "Built responsive user interfaces with HTML, CSS, and SCSS, ensuring cross-browser compatibility.",
+        "Collaborated with team members using Git for version control and project management.",
+        "Deployed and maintained applications using AWS cloud infrastructure.",
+        "Troubleshot technical issues and improved application performance by optimizing the code."
+      ],
+      skills: ["Python", "Django", "React.js", "HTML5", "CSS3", "SCSS", "AWS", "Git"]
+    },
+    {
+      id: "w4",
+      company: "Internship Studio",
+      role: "Web Design & Development Intern",
+      period: "Jun 2024 — Sep 2024",
+      bullets: [
+        "Developed responsive web designs using HTML and SCSS, ensuring cross-device compatibility and a smooth user experience.",
+        "Gained hands-on experience in web design fundamentals, improving skills in structuring HTML elements and styling them efficiently.",
+        "Collaborated on UI/UX design, focusing on enhancing the user interface for intuitive and seamless navigation.",
+        "Enhanced website styling with SCSS, leveraging advanced CSS features to create a visually appealing and structured layout."
+      ],
+      skills: ["HTML5", "CSS3", "SCSS", "UI/UX Design", "Responsive Design"]
+    },
+    {
+      id: "w5",
+      company: "Brototype (Kochi)",
+      role: "Full-Stack Developer Intern",
+      period: "Feb 2023 — Mar 2024",
+      bullets: [
+        "Developed and maintained scalable web applications using Python and Django for backend development, improving project efficiency and maintainability.",
+        "Designed and implemented responsive front-end interfaces using HTML, CSS, Bootstrap, SCSS, JavaScript, and React.js, ensuring user-friendly experiences across platforms.",
+        "Built RESTful APIs and integrated third-party services, enhancing application functionality and enabling seamless communication between systems.",
+        "Optimized database interactions using SQL (PostgreSQL) and NoSQL (MongoDB), improving query efficiency and data storage capabilities.",
+        "Managed version control using Git, facilitating smooth collaboration and source code management."
+      ],
+      skills: ["Python", "Django", "React.js", "JavaScript", "PostgreSQL", "MongoDB", "Git", "REST APIs", "Bootstrap", "SCSS"]
     }
   ],
 

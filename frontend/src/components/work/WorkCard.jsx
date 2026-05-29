@@ -27,13 +27,11 @@ export default function WorkCard({ workData, index }) {
       viewport={{ once: true, margin: "-80px" }}
       whileHover={{ 
         y: -4, 
-        borderColor: "rgba(255, 255, 255, 0.18)", 
-        backgroundColor: "rgba(255, 255, 255, 0.015)" 
       }}
-      className="w-full border border-white/5 bg-surface/20 p-6 md:p-8 rounded-xl transition-all duration-300 shadow-xl relative group overflow-hidden"
+      className="w-full border border-white/5 hover:border-white/20 bg-surface/20 hover:bg-white/1.5 p-6 md:p-8 rounded-xl transition-all duration-300 shadow-xl relative group overflow-hidden"
     >
       {/* Decorative top lighting glow line on hover */}
-      <div className="absolute top-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute top-0 left-0 w-full h-[1.5px] bg-linear-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/5">

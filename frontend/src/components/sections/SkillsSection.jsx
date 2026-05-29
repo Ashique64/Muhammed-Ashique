@@ -60,7 +60,7 @@ const SKILLS_DATA = [
 const CATEGORIES = ["ALL", "FRONTEND", "BACKEND", "DATABASE", "TOOLS", "AI"];
 
 /* ── Subtle Pure JS Swirling Galaxy Background Canvas ── */
-function StarfieldCanvas() {
+export function StarfieldCanvas() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
