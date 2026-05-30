@@ -201,7 +201,7 @@ export default function ProjectsSection({ repos }) {
           ))}
         </div>
 
-        {/* Centered CTA to Work Page */}
+        {/* Centered CTA to GitHub Profile */}
         <div className="flex justify-center mt-12 md:mt-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -211,13 +211,16 @@ export default function ProjectsSection({ repos }) {
             whileHover={{ scale: 1.03 }}
             className="inline-flex"
           >
-            <Link
-              href="/work"
+            <a
+              suppressHydrationWarning
+              href="https://github.com/Ashique64"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5 font-mono text-[10px] tracking-[0.25em] uppercase text-highlight hover:text-black border border-white/10 hover:border-white bg-white/5 hover:bg-white px-8 py-4 rounded-full transition-all duration-300 group shadow-[0_0_20px_rgba(255,255,255,0.02)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer"
             >
-              View Work Experience
+              Explore More on GitHub
               <span className="group-hover:translate-x-1.5 transition-transform duration-200">→</span>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </div>
