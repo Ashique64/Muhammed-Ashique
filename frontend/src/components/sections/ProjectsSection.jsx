@@ -104,8 +104,7 @@ function ProjectCard({ repo, index }) {
               {repo.topics.map((topic) => (
                 <span
                   key={topic}
-                  className="font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/6
-                             text-muted/70 bg-white/3 tracking-wider"
+                  className="font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/6 text-muted/70 bg-white/3 tracking-wider"
                 >
                   {topic}
                 </span>
