@@ -1,6 +1,7 @@
 import WorkCard from "@/components/work/WorkCard";
 import { CONFIG } from "@/lib/constants";
 import PageProgress from "@/components/ui/PageProgress";
+import Link from "next/link";
 
 export const metadata = {
   title: `Work Experience | ${CONFIG.profile.name}`,
@@ -44,6 +45,17 @@ export default function WorkPage() {
 
 
         <div className="max-w-4xl w-full flex flex-col relative z-10">
+          {/* Back Button Link */}
+          <Link
+            href="/#projects"
+            className="group inline-flex items-center gap-2 font-mono text-[9px] tracking-[0.2em] uppercase text-muted hover:text-highlight mb-8 transition-colors select-none"
+          >
+            <span className="group-hover:-translate-x-1 transition-transform duration-200">
+              ←
+            </span>
+            Back to Selected Work
+          </Link>
+
           {/* Header Block */}
           <div className="mb-16 md:mb-24 flex flex-col items-start border-b border-white/5 pb-12 select-none">
             <span className="font-mono text-[9px] tracking-[0.35em] text-muted uppercase">

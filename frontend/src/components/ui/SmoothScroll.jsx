@@ -46,15 +46,31 @@ export default function SmoothScroll({ children }) {
     };
   }, []);
 
-  // Recalculate dimensions and scroll to top on every route transition
+  // Recalculate dimensions and scroll to top or target anchor on every route transition
   useEffect(() => {
     if (!lenisRef.current) return;
     
-    // Reset scroll position to top
-    lenisRef.current.scrollTo(0, { immediate: true });
-    
     // Force recalculation of page/viewport heights
     lenisRef.current.resize();
+    
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    if (hash) {
+      const targetElement = document.querySelector(hash);
+      if (targetElement) {
+        // Wait a brief tick to ensure components have fully mounted/rendered
+        setTimeout(() => {
+          lenisRef.current.scrollTo(targetElement, { 
+            offset: -80, // Offset for header spacing
+            duration: 1.2
+          });
+        }, 100);
+      } else {
+        lenisRef.current.scrollTo(0, { immediate: true });
+      }
+    } else {
+      // Reset scroll position to top
+      lenisRef.current.scrollTo(0, { immediate: true });
+    }
     
     // Refresh ScrollTrigger tracking
     ScrollTrigger.refresh();
