@@ -14,6 +14,34 @@ const PANEL_COUNT = PANELS.length;
 /* Step labels for the morphing shape (mobile fallback) */
 const SHAPE_LABELS = ["Crystal", "Prism", "Ring", "Sphere", "Core", "Pulse", "Transcend"];
 
+const slideVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? 120 : -120,
+    opacity: 0,
+    filter: "blur(4px)",
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      x: { type: "spring", stiffness: 300, damping: 30 },
+      opacity: { duration: 0.3 },
+      filter: { duration: 0.3 },
+    },
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? 120 : -120,
+    opacity: 0,
+    filter: "blur(4px)",
+    transition: {
+      x: { type: "spring", stiffness: 300, damping: 30 },
+      opacity: { duration: 0.3 },
+      filter: { duration: 0.3 },
+    },
+  }),
+};
+
 export default function PhilosophySection() {
   const containerRef = useRef(null);
   const [mounted, setMounted]           = useState(false);
@@ -21,6 +49,27 @@ export default function PhilosophySection() {
   const [activePanelIndex, setActivePanelIndex] = useState(0);
   const [progress3D, setProgress3D]     = useState(0);
   const [scrollWidthPct, setScrollWidthPct] = useState(0);
+  
+  const [direction, setDirection] = useState(0);
+
+  const paginate = (newIndex) => {
+    if (newIndex < 0 || newIndex >= PANEL_COUNT) return;
+    setDirection(newIndex > activePanelIndex ? 1 : -1);
+    setActivePanelIndex(newIndex);
+  };
+
+  const handleDragEnd = (event, info) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      if (activePanelIndex < PANEL_COUNT - 1) {
+        paginate(activePanelIndex + 1);
+      }
+    } else if (info.offset.x > swipeThreshold) {
+      if (activePanelIndex > 0) {
+        paginate(activePanelIndex - 1);
+      }
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -30,10 +79,9 @@ export default function PhilosophySection() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Pass target ONLY after mount so Framer Motion never sees a null ref during SSR.
-  // When mounted=false, useScroll() tracks window scroll harmlessly.
+  // Pass target ONLY after mount and if not on mobile, so Framer Motion never sees a null ref during SSR or mobile carousel view.
   const { scrollYProgress } = useScroll(
-    mounted
+    mounted && !isMobile
       ? { target: containerRef, offset: ["start start", "end end"] }
       : {}
   );
@@ -43,15 +91,151 @@ export default function PhilosophySection() {
   );
   const morphProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  // Sync motion values → React state (for AnimatePresence + 3D canvas)
+  // Sync motion values → React state (for AnimatePresence + 3D canvas) - desktop only
   useEffect(() => {
+    if (isMobile) return;
     const unsubPanel    = activePanel.on("change",    (v) => setActivePanelIndex(Math.round(v)));
     const unsubProgress = morphProgress.on("change",  (v) => setProgress3D(v));
     const unsubScroll   = scrollYProgress.on("change",(v) => setScrollWidthPct(v * 100));
     return () => { unsubPanel(); unsubProgress(); unsubScroll(); };
-  }, [activePanel, morphProgress, scrollYProgress]);
+  }, [activePanel, morphProgress, scrollYProgress, isMobile]);
 
   const currentPanel = PANELS[activePanelIndex] ?? PANELS[PANELS.length - 1];
+
+  if (!mounted) return null;
+
+  if (isMobile) {
+    return (
+      <section
+        id="philosophy"
+        className="relative bg-bg border-t border-white/5 py-24 px-6 overflow-hidden flex flex-col items-center"
+      >
+        {/* Ambient glow */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-all duration-700"
+          style={{
+            background: `radial-gradient(ellipse 70% 70% at 50% 50%, 
+              hsl(${260 + activePanelIndex * 15}, 60%, 8%) 0%, transparent 80%)`,
+          }}
+        />
+
+        {/* Section label */}
+        <div className="w-full max-w-md flex justify-between items-center mb-8 relative z-10">
+          <span className="font-mono text-[9px] tracking-[0.35em] uppercase text-muted">
+            02 — Philosophy
+          </span>
+          <span className="font-mono text-[9px] tracking-[0.3em] text-violet-400/70 uppercase">
+            {String(activePanelIndex + 1).padStart(2, "0")} / {String(PANEL_COUNT).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* Dynamic progress bar */}
+        <div className="w-full max-w-md h-[2px] bg-white/5 rounded-full mb-10 overflow-hidden relative z-10">
+          <div
+            className="h-full bg-violet-500/60 transition-all duration-500"
+            style={{ width: `${((activePanelIndex + 1) / PANEL_COUNT) * 100}%` }}
+          />
+        </div>
+
+        {/* Swipeable Carousel Card Container */}
+        <div className="w-full max-w-md min-h-[360px] relative flex items-center justify-center z-10">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={activePanelIndex}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
+              className="w-full border border-white/8 bg-surface/10 backdrop-blur-sm p-6 rounded-2xl flex flex-col justify-between min-h-[350px] relative overflow-hidden group touch-pan-y"
+            >
+              {/* Decorative Giant Shape Label Underlay */}
+              <div className="absolute -bottom-6 -right-6 font-display text-[22vw] text-violet-900/10 select-none pointer-events-none uppercase leading-none z-0">
+                {SHAPE_LABELS[activePanelIndex] ?? "∞"}
+              </div>
+
+              <div className="relative z-10 flex flex-col gap-6 w-full">
+                {/* Heading with highlights */}
+                <h2 className="font-display text-3xl leading-[1.25] tracking-tight text-accent">
+                  {currentPanel.heading.split(" ").map((word, idx) => {
+                    const clean = word.replace(/[.,#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
+                    const isHighlight = (currentPanel.highlight ?? []).some(
+                      (hl) => hl.replace(/[.,#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase() === clean
+                    );
+                    return (
+                      <span key={idx} className={isHighlight ? "text-violet-300 font-medium" : "opacity-85"}>
+                        {word}{" "}
+                      </span>
+                    );
+                  })}
+                </h2>
+
+                {/* Description */}
+                {currentPanel.description && (
+                  <p className="font-sans text-xs leading-relaxed text-muted max-w-sm">
+                    {currentPanel.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Bottom Row Controls */}
+              <div className="relative z-10 flex justify-between items-center mt-8 pt-6 border-t border-white/5 w-full">
+                {/* Left side: Slide dots navigation */}
+                <div className="flex items-center gap-1.5">
+                  {PANELS.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => paginate(i)}
+                      className="w-2.5 h-2.5 rounded-full transition-all duration-300 p-0 border-0"
+                      style={{
+                        background: i === activePanelIndex ? "rgba(167,139,250,0.9)" : "rgba(255,255,255,0.12)",
+                        transform: i === activePanelIndex ? "scale(1.2)" : "scale(1)",
+                        cursor: "pointer",
+                      }}
+                      aria-label={`Go to slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Right side: Arrow buttons */}
+                <div className="flex gap-2">
+                  <button
+                    disabled={activePanelIndex === 0}
+                    onClick={() => paginate(activePanelIndex - 1)}
+                    className="w-10 h-10 rounded-full border border-white/8 flex items-center justify-center text-muted hover:text-white bg-white/5 active:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                    aria-label="Previous slide"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M9 11L4 7L9 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <button
+                    disabled={activePanelIndex === PANEL_COUNT - 1}
+                    onClick={() => paginate(activePanelIndex + 1)}
+                    className="w-10 h-10 rounded-full border border-white/8 flex items-center justify-center text-muted hover:text-white bg-white/5 active:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                    aria-label="Next slide"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M5 11L10 7L5 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Swipe Hint */}
+        <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted/30 mt-6 relative z-10 select-none animate-pulse">
+          ← Swipe left or right to explore →
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section

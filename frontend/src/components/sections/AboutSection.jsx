@@ -190,7 +190,7 @@ export default function AboutSection() {
           </div>
 
           {/* Separator */}
-          <motion.div variants={childVariants} className="w-12 h-px bg-white/10" />
+          <motion.div variants={childVariants} className="hidden md:block w-12 h-px bg-white/10" />
 
           {/* Social links */}
           <motion.div

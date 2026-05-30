@@ -53,7 +53,7 @@ export default function Hero() {
 
       {/* ── 3D NeuralCore Canvas — centered, pointer-events-none ── */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div style={{ width: isMobile ? 400 : 800, height: isMobile ? 400 : 800 }}>
+        <div style={{ width: isMobile ? 550 : 800, height: isMobile ? 550 : 800 }}>
           {mounted && (
             <Canvas
               camera={{ position: [0, 0, 3.5], fov: 55 }}

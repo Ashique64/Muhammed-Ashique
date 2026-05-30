@@ -174,7 +174,7 @@ export default function PrismCore({ mouseX = 0, mouseY = 0, isMobile = false }) 
   });
 
   return (
-    <group ref={groupRef} scale={isMobile ? 0.7 : 1.05}>
+    <group ref={groupRef} scale={isMobile ? 0.95 : 1.05}>
       <CentralPrism />
       <OrbitingShards isMobile={isMobile} />
       <TechDust isMobile={isMobile} />
