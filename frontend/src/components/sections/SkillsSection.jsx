@@ -470,7 +470,7 @@ export default function SkillsSection() {
         </div>
 
         {/* Brutalist Footer Row */}
-        <div className="flex justify-between items-center mt-12 pt-6 border-t border-white/5 font-mono text-[9px] text-muted tracking-widest uppercase">
+        <div className="flex justify-between items-center mt-12 font-mono text-[9px] text-muted tracking-widest uppercase">
           <span>always learning</span>
         </div>
 
