@@ -4,6 +4,7 @@ import SmoothScroll from "@/components/ui/SmoothScroll";
 import Navbar from "@/components/ui/Navbar";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Frame from "@/components/ui/Frame";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,9 @@ export default function RootLayout({ children }) {
 
           {/* ── Scrollable page content ── */}
           {children}
+
+          {/* ── Vercel Analytics ── */}
+          <Analytics />
         </SmoothScroll>
       </body>
     </html>

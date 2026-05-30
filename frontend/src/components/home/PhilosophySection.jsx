@@ -160,7 +160,7 @@ export default function PhilosophySection() {
 
               <div className="relative z-10 flex flex-col gap-6 w-full">
                 {/* Heading with highlights */}
-                <h2 className="font-display text-3xl leading-[1.25] tracking-tight text-accent">
+                <h2 className="font-display text-3xl leading-tight tracking-tight text-accent">
                   {currentPanel.heading.split(" ").map((word, idx) => {
                     const clean = word.replace(/[.,#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
                     const isHighlight = (currentPanel.highlight ?? []).some(
