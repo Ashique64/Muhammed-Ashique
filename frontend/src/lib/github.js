@@ -19,8 +19,8 @@ const PROJECT_DESCRIPTIONS = {
 /** Custom topic (tag) overrides for showcase projects */
 const PROJECT_TOPICS = {
   "cozech-agency": ["Next.js", "GSAP", "Tailwind", "SCSS"],
-  "G-G-partner-Expense-Tracker": ["Supabase", "Tailwind", "SCSS", "PostgreSQL"],
-  "DRZ_Data_Collection": ["PostgreSQL", "React.js", "Tailwind", "SCSS", "Django"],
+  "G-G-partner-Expense-Tracker": ["Next.js", "Supabase", "Tailwind", "SCSS", "PostgreSQL"],
+  "DRZ_Data_Collection": ["Django", "React.js", "PostgreSQL", "Tailwind", "SCSS"],
   "POS-Billing": ["Django", "PostgreSQL"],
 };
 
@@ -156,7 +156,7 @@ const FALLBACK_REPOS = [
     languageColor: "#A78BFA",
     stars: 0,
     forks: 0,
-    topics: ["Supabase", "Tailwind", "SCSS", "PostgreSQL"],
+    topics: ["Next.js", "Supabase", "Tailwind", "SCSS", "PostgreSQL"],
     updatedAt: "Feb 2026",
   },
   {
@@ -169,7 +169,7 @@ const FALLBACK_REPOS = [
     languageColor: "#A78BFA",
     stars: 0,
     forks: 0,
-    topics: ["PostgreSQL", "React.js", "Tailwind", "SCSS", "Django"],
+    topics: ["Django", "React.js", "PostgreSQL", "Tailwind", "SCSS"],
     updatedAt: "Jul 2024",
   },
   {
