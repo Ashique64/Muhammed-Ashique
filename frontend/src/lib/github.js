@@ -10,24 +10,24 @@ const USERNAME = "Ashique64";
 
 /** Custom description overrides for showcase projects */
 const PROJECT_DESCRIPTIONS = {
+  cacapo: "A feature-rich WhatsApp-integrated e-commerce platform built with Next.js, Supabase, and Tailwind CSS, featuring a complete shopping flow, wishlist/cart management, Razorpay integration, and automated WhatsApp order notifications.",
   "cozech-agency": "A modern digital agency website built with a premium UI/UX experience, featuring smooth animations, responsive layouts, and performance-focused frontend architecture for showcasing services, projects, and brand identity.",
-  "G-G-partner-Expense-Tracker": "A collaborative expense management system designed for business partners to track shared expenses, manage financial records, calculate balances, and simplify partnership accounting workflows efficiently.",
   "DRZ_Data_Collection": "A custom data collection and management platform developed to streamline structured data entry, organization, and processing with an efficient workflow-focused interface and scalable backend architecture.",
   "POS-Billing": "A Point of Sale (POS) billing system built for retail and business operations, featuring invoice generation, sales tracking, product management, and streamlined billing workflows for efficient store management.",
 };
 
 /** Custom topic (tag) overrides for showcase projects */
 const PROJECT_TOPICS = {
+  cacapo: ["Next.js", "Supabase", "Zustand", "Razorpay", "Tailwind"],
   "cozech-agency": ["Next.js", "GSAP", "Tailwind", "SCSS"],
-  "G-G-partner-Expense-Tracker": ["Next.js", "Supabase", "Tailwind", "SCSS", "PostgreSQL"],
   "DRZ_Data_Collection": ["Django", "React.js", "PostgreSQL", "Tailwind", "SCSS"],
   "POS-Billing": ["Django", "PostgreSQL"],
 };
 
 /** Custom language overrides for showcase projects */
 const PROJECT_LANGUAGES = {
+  cacapo: "JavaScript, CSS",
   "cozech-agency": "JavaScript, CSS",
-  "G-G-partner-Expense-Tracker": "JavaScript, CSS",
   "DRZ_Data_Collection": "Python, JavaScript, CSS",
   "POS-Billing": "Python",
 };
@@ -57,8 +57,8 @@ export async function fetchGithubRepos() {
 
     const repos = await res.json();
     const selectedNames = CONFIG.profile?.selectedProjects || [
+      "cacapo",
       "cozech-agency",
-      "G-G-partner-Expense-Tracker",
       "DRZ_Data_Collection",
       "POS-Billing"
     ];
@@ -148,16 +148,16 @@ const FALLBACK_REPOS = [
   },
   {
     id: 2,
-    name: "G-G-partner-Expense-Tracker",
-    description: "A collaborative expense management system designed for business partners to track shared expenses, manage financial records, calculate balances, and simplify partnership accounting workflows efficiently.",
-    url: "https://github.com/Ashique64/G-G-partner-Expense-Tracker",
+    name: "cacapo",
+    description: "A feature-rich WhatsApp-integrated e-commerce platform built with Next.js, Supabase, and Tailwind CSS, featuring a complete shopping flow, wishlist/cart management, Razorpay integration, and automated WhatsApp order notifications.",
+    url: "https://github.com/Ashique64/cacapo",
     homepage: null,
     language: "JavaScript, CSS",
     languageColor: "#A78BFA",
     stars: 0,
     forks: 0,
-    topics: ["Next.js", "Supabase", "Tailwind", "SCSS", "PostgreSQL"],
-    updatedAt: "Feb 2026",
+    topics: ["Next.js", "Supabase", "Zustand", "Razorpay", "Tailwind"],
+    updatedAt: "Jul 2026",
   },
   {
     id: 3,

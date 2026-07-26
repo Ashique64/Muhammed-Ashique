@@ -18,8 +18,8 @@ export const CONFIG = {
       { value: "∞", label: "Curiosity" },
     ],
     selectedProjects: [
+      "cacapo",
       "cozech-agency",
-      "G-G-partner-Expense-Tracker",
       "DRZ_Data_Collection",
       "POS-Billing"
     ],
