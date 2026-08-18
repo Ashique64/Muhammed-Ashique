@@ -62,7 +62,7 @@ export const CONFIG = {
     {
       id: "w1",
       company: "Cozech",
-      role: "Freelance Full-Stack Developer",
+      role: "Full-Stack Developer (Remote)",
       period: "Jan 2026 — Present",
       bullets: [
         "Engineered high-performance web applications using Next.js (App Router, Server Components) for optimal SEO and client-side performance.",
